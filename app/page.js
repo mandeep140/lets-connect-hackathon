@@ -13,7 +13,7 @@ const demoPNRs = [
     estimatedTime: '6h 15m',
     passengers: [
       { name: 'Arnab', age: 20, gender: 'Male', berth: 'A1/15' },
-      { name: 'Sakshee', age: 19, gender: 'Female', berth: 'A1/16' }
+      { name: 'Sonakshi', age: 19, gender: 'Female', berth: 'A1/16' }
     ],
     connections: [
       { type: 'Local Train', icon: 'fa-train', description: 'Connect to suburban lines' },
@@ -109,6 +109,163 @@ const demoPNRs = [
       { type: 'Auto', icon: 'fa-motorcycle', description: 'Local auto services' },
       { type: 'Ferry', icon: 'fa-ship', description: 'Backwater transport' }
     ]
+  },
+  {
+    pnr: '6289012345',
+    train: '12002 Bhopal Shatabdi',
+    route: 'New Delhi → Bhopal',
+    distance: '704 km',
+    estimatedTime: '8h 25m',
+    passengers: [
+      { name: 'Sanjay Patel', age: 52, gender: 'Male', berth: 'B1/35' },
+      { name: 'Meera Patel', age: 48, gender: 'Female', berth: 'B1/36' },
+      { name: 'Tanvi Patel', age: 22, gender: 'Female', berth: 'B1/37' }
+    ],
+    connections: [
+      { type: 'Bus', icon: 'fa-bus', description: 'City bus network' },
+      { type: 'Cab', icon: 'fa-car', description: 'Local taxi services' },
+      { type: 'Auto', icon: 'fa-motorcycle', description: 'Auto-rickshaw' },
+      { type: 'Metro', icon: 'fa-subway', description: 'Metro in planning' }
+    ]
+  },
+  {
+    pnr: '6290123456',
+    train: '12430 Lucknow Mail',
+    route: 'New Delhi → Lucknow',
+    distance: '483 km',
+    estimatedTime: '6h 50m',
+    passengers: [
+      { name: 'Aarav Singh', age: 29, gender: 'Male', berth: 'S2/28' }
+    ],
+    connections: [
+      { type: 'Metro', icon: 'fa-subway', description: 'Lucknow Metro' },
+      { type: 'Cab', icon: 'fa-car', description: 'Ola/Uber services' },
+      { type: 'Bus', icon: 'fa-bus', description: 'UPSRTC buses' },
+      { type: 'Auto', icon: 'fa-motorcycle', description: 'E-rickshaws available' }
+    ]
+  },
+  {
+    pnr: '6201234567',
+    train: '12617 Mangala Lakshadweep',
+    route: 'Hazrat Nizamuddin → Ernakulam',
+    distance: '2,649 km',
+    estimatedTime: '42h 40m',
+    passengers: [
+      { name: 'Thomas George', age: 55, gender: 'Male', berth: 'A3/21' },
+      { name: 'Mary George', age: 53, gender: 'Female', berth: 'A3/22' }
+    ],
+    connections: [
+      { type: 'Metro', icon: 'fa-subway', description: 'Kochi Metro Rail' },
+      { type: 'Bus', icon: 'fa-bus', description: 'KSRTC services' },
+      { type: 'Cab', icon: 'fa-car', description: 'Taxi & cab booking' },
+      { type: 'Ferry', icon: 'fa-ship', description: 'Water transport' }
+    ]
+  },
+  {
+    pnr: '6212345678',
+    train: '12009 Shatabdi Express',
+    route: 'Mumbai CST → Ahmedabad',
+    distance: '492 km',
+    estimatedTime: '6h 30m',
+    passengers: [
+      { name: 'Amit Shah', age: 36, gender: 'Male', berth: 'C2/18' },
+      { name: 'Nisha Shah', age: 33, gender: 'Female', berth: 'C2/19' },
+      { name: 'Riya Shah', age: 8, gender: 'Female', berth: 'C2/20' },
+      { name: 'Dev Shah', age: 5, gender: 'Male', berth: 'C2/21' }
+    ],
+    connections: [
+      { type: 'Metro', icon: 'fa-subway', description: 'Ahmedabad Metro' },
+      { type: 'Bus', icon: 'fa-bus', description: 'GSRTC & BRTS' },
+      { type: 'Cab', icon: 'fa-taxi', description: 'App-based cabs' },
+      { type: 'Auto', icon: 'fa-motorcycle', description: 'Auto-rickshaw' }
+    ]
+  },
+  {
+    pnr: '6323456789',
+    train: '12644 Swarna Jayanti',
+    route: 'Chennai Central → Thiruvananthapuram',
+    distance: '719 km',
+    estimatedTime: '13h 30m',
+    passengers: [
+      { name: 'Karthik Raman', age: 31, gender: 'Male', berth: 'S1/42' },
+      { name: 'Divya Raman', age: 28, gender: 'Female', berth: 'S1/43' }
+    ],
+    connections: [
+      { type: 'Metro', icon: 'fa-subway', description: 'Chennai Metro' },
+      { type: 'Local Train', icon: 'fa-train', description: 'Suburban EMU trains' },
+      { type: 'Bus', icon: 'fa-bus', description: 'MTC & State buses' },
+      { type: 'Cab', icon: 'fa-car', description: 'Online cab booking' }
+    ]
+  },
+  {
+    pnr: '6334567890',
+    train: '12860 Gitanjali Express',
+    route: 'Mumbai CST → Howrah',
+    distance: '1,968 km',
+    estimatedTime: '33h 05m',
+    passengers: [
+      { name: 'Sourav Ghosh', age: 44, gender: 'Male', berth: 'B3/14' },
+      { name: 'Rina Ghosh', age: 41, gender: 'Female', berth: 'B3/15' },
+      { name: 'Arjun Ghosh', age: 18, gender: 'Male', berth: 'B3/16' }
+    ],
+    connections: [
+      { type: 'Metro', icon: 'fa-subway', description: 'Mumbai Metro' },
+      { type: 'Local Train', icon: 'fa-train', description: 'Western/Central line' },
+      { type: 'Bus', icon: 'fa-bus', description: 'BEST & MSRTC' },
+      { type: 'Cab', icon: 'fa-taxi', description: 'Mumbai taxis' }
+    ]
+  },
+  {
+    pnr: '6345678902',
+    train: '22691 Rajdhani Express',
+    route: 'Bangalore → New Delhi',
+    distance: '2,444 km',
+    estimatedTime: '34h 15m',
+    passengers: [
+      { name: 'Harish Reddy', age: 39, gender: 'Male', berth: 'A1/25' },
+      { name: 'Sangeetha Reddy', age: 37, gender: 'Female', berth: 'A1/26' }
+    ],
+    connections: [
+      { type: 'Metro', icon: 'fa-subway', description: 'Namma Metro' },
+      { type: 'Bus', icon: 'fa-bus', description: 'BMTC & KSRTC' },
+      { type: 'Cab', icon: 'fa-car', description: 'Cab aggregators' },
+      { type: 'Auto', icon: 'fa-motorcycle', description: 'Auto-rickshaw' }
+    ]
+  },
+  {
+    pnr: '6356789013',
+    train: '12505 North East Express',
+    route: 'New Delhi → Guwahati',
+    distance: '1,962 km',
+    estimatedTime: '30h 50m',
+    passengers: [
+      { name: 'Abhijit Bora', age: 47, gender: 'Male', berth: 'S3/11' },
+      { name: 'Ankita Bora', age: 19, gender: 'Female', berth: 'S3/12' }
+    ],
+    connections: [
+      { type: 'Bus', icon: 'fa-bus', description: 'ASTC bus services' },
+      { type: 'Cab', icon: 'fa-car', description: 'City taxi & cabs' },
+      { type: 'Auto', icon: 'fa-motorcycle', description: 'Shared autos' },
+      { type: 'Ferry', icon: 'fa-ship', description: 'River transport' }
+    ]
+  },
+  {
+    pnr: '6367890124',
+    train: '12432 Trivandrum Rajdhani',
+    route: 'Trivandrum → New Delhi',
+    distance: '3,146 km',
+    estimatedTime: '46h 30m',
+    passengers: [
+      { name: 'Suresh Pillai', age: 58, gender: 'Male', berth: 'A2/5' },
+      { name: 'Radha Pillai', age: 56, gender: 'Female', berth: 'A2/6' },
+      { name: 'Kavya Pillai', age: 24, gender: 'Female', berth: 'A2/7' }
+    ],
+    connections: [
+      { type: 'Bus', icon: 'fa-bus', description: 'KSRTC long distance' },
+      { type: 'Cab', icon: 'fa-taxi', description: 'Prepaid taxi' },
+      { type: 'Auto', icon: 'fa-motorcycle', description: 'Auto-rickshaw' },
+      { type: 'Ferry', icon: 'fa-ship', description: 'Coastal ferries' }
+    ]
   }
 ];
 
@@ -129,6 +286,7 @@ export default function Home() {
   });
   const [showWelcome, setShowWelcome] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedPassengers, setSelectedPassengers] = useState([]);
 
   const handlePNRInput = (e) => {
     const value = e.target.value.replace(/[^0-9]/g, '');
@@ -182,6 +340,7 @@ export default function Home() {
       setMessageType('success');
       setIsSearching(false);
       setShowResults(true);
+      setSelectedPassengers([]);
       
       setTimeout(() => {
         document.getElementById('journey-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -200,11 +359,40 @@ export default function Home() {
   };
 
   const handleConnectionBooking = (connection) => {
-    if (confirm(`🚀 Ready to book ${connection.type}?\n\nService: ${connection.description}\n\nYou'll be redirected to our booking platform.`)) {
+    if (selectedPassengers.length === 0) {
+      alert('⚠️ Please select at least one passenger to proceed with booking.');
+      return;
+    }
+
+    const passengerNames = selectedPassengers.map(index => currentPNRData.passengers[index].name).join(', ');
+    
+    if (confirm(`🚀 Ready to book ${connection.type}?\n\nService: ${connection.description}\nPassengers: ${passengerNames}\n\nYou'll be redirected to our booking platform.`)) {
       if (currentPNRData) {
-        sessionStorage.setItem('currentPNRData', JSON.stringify(currentPNRData));
+        const bookingData = {
+          ...currentPNRData,
+          selectedPassengers: selectedPassengers.map(index => currentPNRData.passengers[index])
+        };
+        sessionStorage.setItem('currentPNRData', JSON.stringify(bookingData));
       }
-      window.location.href = `/booking?type=${encodeURIComponent(connection.type)}&service=${encodeURIComponent(connection.description)}&pnr=${currentPNRData?.pnr || ''}`;
+      window.location.href = `/booking?type=${encodeURIComponent(connection.type)}&service=${encodeURIComponent(connection.description)}&pnr=${currentPNRData?.pnr || ''}&passengers=${selectedPassengers.length}`;
+    }
+  };
+
+  const togglePassengerSelection = (index) => {
+    setSelectedPassengers(prev => {
+      if (prev.includes(index)) {
+        return prev.filter(i => i !== index);
+      } else {
+        return [...prev, index];
+      }
+    });
+  };
+
+  const selectAllPassengers = () => {
+    if (selectedPassengers.length === currentPNRData.passengers.length) {
+      setSelectedPassengers([]);
+    } else {
+      setSelectedPassengers(currentPNRData.passengers.map((_, index) => index));
     }
   };
 
@@ -413,11 +601,42 @@ export default function Home() {
               <h4 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <i className="fas fa-users text-[#238636]"></i>
                 Passengers
+                <button
+                  onClick={selectAllPassengers}
+                  className="ml-auto text-sm px-4 py-2 bg-[#0d1117] border border-[#30363d] rounded-lg hover:border-[#238636] transition-all"
+                >
+                  {selectedPassengers.length === currentPNRData.passengers.length ? (
+                    <><i className="fas fa-times mr-2"></i>Deselect All</>
+                  ) : (
+                    <><i className="fas fa-check-double mr-2"></i>Select All</>
+                  )}
+                </button>
               </h4>
+              <p className="text-[#8b949e] mb-4 text-sm">
+                {selectedPassengers.length > 0 ? (
+                  <span className="text-[#238636]">
+                    <i className="fas fa-check-circle mr-2"></i>
+                    {selectedPassengers.length} passenger{selectedPassengers.length > 1 ? 's' : ''} selected
+                  </span>
+                ) : (
+                  <span>Select passengers to book connections</span>
+                )}
+              </p>
               <div className="grid md:grid-cols-3 gap-4 mb-8">
                 {currentPNRData.passengers.map((passenger, index) => (
-                  <div key={index} className="bg-[#0d1117] border border-[#30363d] rounded-xl p-4">
-                    <h5 className="font-bold mb-2">{passenger.name}</h5>
+                  <div
+                    key={index}
+                    onClick={() => togglePassengerSelection(index)}
+                    className={`bg-[#0d1117] border ${selectedPassengers.includes(index) ? 'border-[#238636] shadow-lg' : 'border-[#30363d]'} rounded-xl p-4 cursor-pointer hover:border-[#238636] transition-all relative`}
+                  >
+                    <div className="absolute top-3 right-3">
+                      <div className={`w-6 h-6 rounded border-2 ${selectedPassengers.includes(index) ? 'bg-[#238636] border-[#238636]' : 'border-[#30363d]'} flex items-center justify-center transition-all`}>
+                        {selectedPassengers.includes(index) && (
+                          <i className="fas fa-check text-white text-xs"></i>
+                        )}
+                      </div>
+                    </div>
+                    <h5 className="font-bold mb-2 pr-8">{passenger.name}</h5>
                     <div className="text-sm text-[#8b949e] space-y-1">
                       <div><i className="fas fa-birthday-cake mr-2"></i>Age: {passenger.age}</div>
                       <div>
@@ -434,19 +653,33 @@ export default function Home() {
                 <i className="fas fa-route text-[#238636]"></i>
                 Available Connections
               </h4>
-              <p className="text-[#8b949e] mb-6">Choose your next mode of transport</p>
+              <p className="text-[#8b949e] mb-6">
+                {selectedPassengers.length > 0 ? (
+                  <span>Choose your next mode of transport for selected passengers</span>
+                ) : (
+                  <span className="text-[#da3633]">⚠️ Please select at least one passenger first</span>
+                )}
+              </p>
               <div className="grid md:grid-cols-4 gap-4">
                 {currentPNRData.connections.map((connection, index) => (
                   <div
                     key={index}
                     onClick={() => handleConnectionBooking(connection)}
-                    className="bg-[#0d1117] border border-[#30363d] rounded-xl p-6 cursor-pointer hover:border-[#238636] hover:shadow-lg transition-all text-center"
+                    className={`bg-[#0d1117] border border-[#30363d] rounded-xl p-6 ${selectedPassengers.length > 0 ? 'cursor-pointer hover:border-[#238636] hover:shadow-lg' : 'opacity-50 cursor-not-allowed'} transition-all text-center`}
                   >
                     <div className="text-4xl text-[#238636] mb-3">
                       <i className={`fas ${connection.icon}`}></i>
                     </div>
                     <h4 className="font-bold mb-2">{connection.type}</h4>
                     <p className="text-sm text-[#8b949e]">{connection.description}</p>
+                    {selectedPassengers.length > 0 && (
+                      <div className="mt-3 pt-3 border-t border-[#30363d]">
+                        <span className="text-xs text-[#238636]">
+                          <i className="fas fa-users mr-1"></i>
+                          {selectedPassengers.length} passenger{selectedPassengers.length > 1 ? 's' : ''}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
