@@ -98,6 +98,11 @@ export async function GET(request, { params }) {
   // Number of passengers (1-4)
   const passengerCount = Math.floor(Math.random() * 4) + 1;
   
+  // Boarding time between 18:00 (6 PM) and 23:00 (11 PM)
+  const hour = Math.floor(Math.random() * 6) + 18; // 18-23
+  const minute = ['00', '15', '30', '45'][Math.floor(Math.random() * 4)];
+  const boardingTime = `${String(hour).padStart(2, '0')}:${minute}`;
+  
   const response = {
     pnr,
     train_number: train.number,
@@ -112,7 +117,7 @@ export async function GET(request, { params }) {
     quota: quota,
     chart_prepared: chartStatus,
     distance: `${Math.floor(Math.random() * 2000) + 200} KM`,
-    boarding_time: `${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${['00', '15', '30', '45'][Math.floor(Math.random() * 4)]}`,
+    boarding_time: boardingTime,
     journey_duration: train.duration,
     passengers: genPassengers(passengerCount),
     ticket_fare: {

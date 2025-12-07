@@ -7,11 +7,11 @@ const trains = [
     name: 'Rajdhani Express', 
     type: 'Express',
     stops: [
-      { code: 'NDLS', name: 'New Delhi', arrival: '--', departure: '16:55', platform: '16', day: 1 },
-      { code: 'CNB', name: 'Kanpur Central', arrival: '18:30', departure: '18:35', platform: '4', day: 1 },
-      { code: 'PNBE', name: 'Patna Jn', arrival: '20:15', departure: '20:20', platform: '10', day: 1 },
-      { code: 'PRYJ', name: 'Parasnath', arrival: '21:45', departure: '21:47', platform: '2', day: 1 },
-      { code: 'HWH', name: 'Howrah Jn', arrival: '23:30', departure: '--', platform: '9', day: 1 }
+      { code: 'NDLS', name: 'New Delhi', arrival: '--', departure: '18:00', platform: '16', day: 1 },
+      { code: 'CNB', name: 'Kanpur Central', arrival: '19:35', departure: '19:40', platform: '4', day: 1 },
+      { code: 'PNBE', name: 'Patna Jn', arrival: '21:20', departure: '21:25', platform: '10', day: 1 },
+      { code: 'PRYJ', name: 'Parasnath', arrival: '22:50', departure: '22:52', platform: '2', day: 1 },
+      { code: 'HWH', name: 'Howrah Jn', arrival: '00:35', departure: '--', platform: '9', day: 2 }
     ]
   },
   { 
@@ -19,12 +19,12 @@ const trains = [
     name: 'Mumbai Rajdhani', 
     type: 'Express',
     stops: [
-      { code: 'MMCT', name: 'Mumbai Central', arrival: '--', departure: '17:00', platform: '8', day: 1 },
-      { code: 'SUR', name: 'Surat', arrival: '18:45', departure: '18:50', platform: '3', day: 1 },
-      { code: 'BRC', name: 'Vadodara Jn', arrival: '19:55', departure: '20:00', platform: '6', day: 1 },
-      { code: 'RTM', name: 'Ratlam Jn', arrival: '21:30', departure: '21:35', platform: '4', day: 1 },
-      { code: 'BPL', name: 'Bhopal Jn', arrival: '23:15', departure: '23:20', platform: '5', day: 1 },
-      { code: 'NDLS', name: 'New Delhi', arrival: '01:10', departure: '--', platform: '14', day: 2 }
+      { code: 'MMCT', name: 'Mumbai Central', arrival: '--', departure: '18:15', platform: '8', day: 1 },
+      { code: 'SUR', name: 'Surat', arrival: '20:00', departure: '20:05', platform: '3', day: 1 },
+      { code: 'BRC', name: 'Vadodara Jn', arrival: '21:10', departure: '21:15', platform: '6', day: 1 },
+      { code: 'RTM', name: 'Ratlam Jn', arrival: '22:45', departure: '22:50', platform: '4', day: 1 },
+      { code: 'BPL', name: 'Bhopal Jn', arrival: '00:30', departure: '00:35', platform: '5', day: 2 },
+      { code: 'NDLS', name: 'New Delhi', arrival: '02:25', departure: '--', platform: '14', day: 2 }
     ]
   },
   { 
@@ -53,11 +53,11 @@ const trains = [
     name: 'Bhopal Shatabdi', 
     type: 'Shatabdi',
     stops: [
-      { code: 'NDLS', name: 'New Delhi', arrival: '--', departure: '06:00', platform: '10', day: 1 },
-      { code: 'AGC', name: 'Agra Cantt', arrival: '07:35', departure: '07:37', platform: '3', day: 1 },
-      { code: 'GWL', name: 'Gwalior Jn', arrival: '08:28', departure: '08:30', platform: '2', day: 1 },
-      { code: 'JHS', name: 'Jhansi Jn', arrival: '09:20', departure: '09:25', platform: '4', day: 1 },
-      { code: 'BPL', name: 'Bhopal Jn', arrival: '11:15', departure: '--', platform: '6', day: 1 }
+      { code: 'NDLS', name: 'New Delhi', arrival: '--', departure: '18:30', platform: '10', day: 1 },
+      { code: 'AGC', name: 'Agra Cantt', arrival: '20:05', departure: '20:07', platform: '3', day: 1 },
+      { code: 'GWL', name: 'Gwalior Jn', arrival: '20:58', departure: '21:00', platform: '2', day: 1 },
+      { code: 'JHS', name: 'Jhansi Jn', arrival: '21:50', departure: '21:55', platform: '4', day: 1 },
+      { code: 'BPL', name: 'Bhopal Jn', arrival: '23:45', departure: '--', platform: '6', day: 1 }
     ]
   },
   { 
@@ -105,11 +105,11 @@ const trains = [
     name: 'Delhi Local', 
     type: 'Local Train',
     stops: [
-      { code: 'NDLS', name: 'New Delhi', arrival: '--', departure: '07:00', platform: '2', day: 1 },
-      { code: 'OKD', name: 'Old Delhi', arrival: '07:10', departure: '07:12', platform: '1', day: 1 },
-      { code: 'SDB', name: 'Shahdara', arrival: '07:25', departure: '07:27', platform: '2', day: 1 },
-      { code: 'VVB', name: 'Vivek Vihar', arrival: '07:35', departure: '07:37', platform: '1', day: 1 },
-      { code: 'GZB', name: 'Ghaziabad', arrival: '08:30', departure: '--', platform: '3', day: 1 }
+      { code: 'NDLS', name: 'New Delhi', arrival: '--', departure: '19:00', platform: '2', day: 1 },
+      { code: 'OKD', name: 'Old Delhi', arrival: '19:10', departure: '19:12', platform: '1', day: 1 },
+      { code: 'SDB', name: 'Shahdara', arrival: '19:25', departure: '19:27', platform: '2', day: 1 },
+      { code: 'VVB', name: 'Vivek Vihar', arrival: '19:35', departure: '19:37', platform: '1', day: 1 },
+      { code: 'GZB', name: 'Ghaziabad', arrival: '20:30', departure: '--', platform: '3', day: 1 }
     ]
   },
   { 
@@ -117,11 +117,11 @@ const trains = [
     name: 'Mumbai Local', 
     type: 'Local Train',
     stops: [
-      { code: 'CSTM', name: 'Chhatrapati Shivaji Terminus', arrival: '--', departure: '08:00', platform: '12', day: 1 },
-      { code: 'BYC', name: 'Byculla', arrival: '08:10', departure: '08:12', platform: '2', day: 1 },
-      { code: 'CLA', name: 'Kurla', arrival: '08:25', departure: '08:27', platform: '4', day: 1 },
-      { code: 'TNA', name: 'Thane', arrival: '08:50', departure: '08:52', platform: '6', day: 1 },
-      { code: 'KALYAN', name: 'Kalyan', arrival: '09:45', departure: '--', platform: '8', day: 1 }
+      { code: 'CSTM', name: 'Chhatrapati Shivaji Terminus', arrival: '--', departure: '19:15', platform: '12', day: 1 },
+      { code: 'BYC', name: 'Byculla', arrival: '19:25', departure: '19:27', platform: '2', day: 1 },
+      { code: 'CLA', name: 'Kurla', arrival: '19:40', departure: '19:42', platform: '4', day: 1 },
+      { code: 'TNA', name: 'Thane', arrival: '20:05', departure: '20:07', platform: '6', day: 1 },
+      { code: 'KALYAN', name: 'Kalyan', arrival: '21:00', departure: '--', platform: '8', day: 1 }
     ]
   },
   { 
@@ -129,12 +129,12 @@ const trains = [
     name: 'Delhi Metro Blue Line', 
     type: 'Metro',
     stops: [
-      { code: 'DWRK', name: 'Dwarka Sector 21', arrival: '--', departure: '06:00', platform: '1', day: 1 },
-      { code: 'JANAK', name: 'Janakpuri West', arrival: '06:08', departure: '06:09', platform: '1', day: 1 },
-      { code: 'RJCHK', name: 'Rajiv Chowk', arrival: '06:25', departure: '06:26', platform: '2', day: 1 },
-      { code: 'MANDI', name: 'Mandi House', arrival: '06:30', departure: '06:31', platform: '1', day: 1 },
-      { code: 'AKSHD', name: 'Akshardham', arrival: '06:42', departure: '06:43', platform: '2', day: 1 },
-      { code: 'NOIDA', name: 'Noida City Centre', arrival: '07:15', departure: '--', platform: '1', day: 1 }
+      { code: 'DWRK', name: 'Dwarka Sector 21', arrival: '--', departure: '19:30', platform: '1', day: 1 },
+      { code: 'JANAK', name: 'Janakpuri West', arrival: '19:38', departure: '19:39', platform: '1', day: 1 },
+      { code: 'RJCHK', name: 'Rajiv Chowk', arrival: '19:55', departure: '19:56', platform: '2', day: 1 },
+      { code: 'MANDI', name: 'Mandi House', arrival: '20:00', departure: '20:01', platform: '1', day: 1 },
+      { code: 'AKSHD', name: 'Akshardham', arrival: '20:12', departure: '20:13', platform: '2', day: 1 },
+      { code: 'NOIDA', name: 'Noida City Centre', arrival: '20:45', departure: '--', platform: '1', day: 1 }
     ]
   },
   { 
@@ -142,12 +142,12 @@ const trains = [
     name: 'Delhi Metro Red Line', 
     type: 'Metro',
     stops: [
-      { code: 'RITHALA', name: 'Rithala', arrival: '--', departure: '05:45', platform: '1', day: 1 },
-      { code: 'ROHINI', name: 'Rohini East', arrival: '05:52', departure: '05:53', platform: '1', day: 1 },
-      { code: 'KASHM', name: 'Kashmere Gate', arrival: '06:15', departure: '06:16', platform: '2', day: 1 },
-      { code: 'NDLSM', name: 'New Delhi Metro', arrival: '06:22', departure: '06:23', platform: '1', day: 1 },
-      { code: 'SHIVJ', name: 'Shivaji Stadium', arrival: '06:28', departure: '06:29', platform: '2', day: 1 },
-      { code: 'GHAZIABAD', name: 'Ghaziabad', arrival: '07:05', departure: '--', platform: '1', day: 1 }
+      { code: 'RITHALA', name: 'Rithala', arrival: '--', departure: '19:45', platform: '1', day: 1 },
+      { code: 'ROHINI', name: 'Rohini East', arrival: '19:52', departure: '19:53', platform: '1', day: 1 },
+      { code: 'KASHM', name: 'Kashmere Gate', arrival: '20:15', departure: '20:16', platform: '2', day: 1 },
+      { code: 'NDLSM', name: 'New Delhi Metro', arrival: '20:22', departure: '20:23', platform: '1', day: 1 },
+      { code: 'SHIVJ', name: 'Shivaji Stadium', arrival: '20:28', departure: '20:29', platform: '2', day: 1 },
+      { code: 'GHAZIABAD', name: 'Ghaziabad', arrival: '21:05', departure: '--', platform: '1', day: 1 }
     ]
   },
   { 
@@ -155,12 +155,12 @@ const trains = [
     name: 'Mumbai Metro Line 1', 
     type: 'Metro',
     stops: [
-      { code: 'VERSOVA', name: 'Versova', arrival: '--', departure: '05:30', platform: '1', day: 1 },
-      { code: 'ANDHER', name: 'Andheri', arrival: '05:38', departure: '05:39', platform: '1', day: 1 },
-      { code: 'SANTC', name: 'Santacruz', arrival: '05:44', departure: '05:45', platform: '1', day: 1 },
-      { code: 'BANDRA', name: 'Bandra BKC', arrival: '05:52', departure: '05:53', platform: '1', day: 1 },
-      { code: 'SIONM', name: 'Sion', arrival: '06:02', departure: '06:03', platform: '1', day: 1 },
-      { code: 'GHATKOPAR', name: 'Ghatkopar', arrival: '06:15', departure: '--', platform: '1', day: 1 }
+      { code: 'VERSOVA', name: 'Versova', arrival: '--', departure: '20:00', platform: '1', day: 1 },
+      { code: 'ANDHER', name: 'Andheri', arrival: '20:08', departure: '20:09', platform: '1', day: 1 },
+      { code: 'SANTC', name: 'Santacruz', arrival: '20:14', departure: '20:15', platform: '1', day: 1 },
+      { code: 'BANDRA', name: 'Bandra BKC', arrival: '20:22', departure: '20:23', platform: '1', day: 1 },
+      { code: 'SIONM', name: 'Sion', arrival: '20:32', departure: '20:33', platform: '1', day: 1 },
+      { code: 'GHATKOPAR', name: 'Ghatkopar', arrival: '20:45', departure: '--', platform: '1', day: 1 }
     ]
   }
 ];
