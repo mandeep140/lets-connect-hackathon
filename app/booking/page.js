@@ -117,7 +117,7 @@ export default function BookingPage() {
     setShowBookingModal(true);
   };
 
-  const confirmBooking = () => {
+  const confirmBooking = async () => {
     const bookingId = `BKG${Date.now().toString().slice(-8)}`;
     const fare = Math.floor(passengers * (Math.random() * 500 + 300));
     const bookingTime = new Date().toLocaleString('en-IN', { 
@@ -129,6 +129,9 @@ export default function BookingPage() {
       minute: '2-digit',
       hour12: true
     });
+
+    const qrData = `IRCTC-LET'S CONNECT|BKG:${bookingId}|TRN:${selectedTrain.number}|FROM:${selectedFromStation}|TO:${selectedToStation}|PAX:${passengers}|FARE:${fare}|DATE:${selectedTrain.journey_day}|REF:${currentPNRData?.pnr}`;
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
 
     const booking = {
       bookingId,
@@ -145,12 +148,56 @@ export default function BookingPage() {
       journeyDate: selectedTrain.journey_day
     };
 
-    const qrData = `IRCTC-LET'S CONNECT|BKG:${bookingId}|TRN:${selectedTrain.number}|FROM:${selectedFromStation}|TO:${selectedToStation}|PAX:${passengers}|FARE:${fare}|DATE:${selectedTrain.journey_day}|REF:${currentPNRData?.pnr}`;
-    setQrCode(`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`);
-    
+    setQrCode(qrCodeUrl);
     setBookingDetails(booking);
     setShowBookingModal(false);
     setShowTicket(true);
+
+    // Save booking to database
+    try {
+      const bookingData = {
+        bookingId,
+        pnr: currentPNRData?.pnr,
+        train: {
+          name: selectedTrain.name,
+          number: selectedTrain.number,
+          type: selectedTrain.type
+        },
+        originalTrain: {
+          name: currentPNRData?.train_name,
+          number: currentPNRData?.train_number
+        },
+        journey: {
+          from: selectedFromStation,
+          fromName: getStationName(selectedFromStation),
+          to: selectedToStation,
+          toName: getStationName(selectedToStation),
+          date: selectedTrain.journey_day,
+          departure: selectedTrain.departure,
+          arrival: selectedTrain.arrival,
+          fromPlatform: selectedTrain.from_platform,
+          toPlatform: selectedTrain.to_platform
+        },
+        passengers: selectedPassengers,
+        fare: {
+          total: fare,
+          baseFare: Math.floor(fare * 0.85),
+          tax: Math.floor(fare * 0.10),
+          bookingCharge: Math.floor(fare * 0.05)
+        },
+        class: currentPNRData?.class || 'SL',
+        qrCode: qrCodeUrl,
+        status: 'confirmed'
+      };
+
+      await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bookingData)
+      });
+    } catch (error) {
+      console.error('Error saving booking:', error);
+    }
   };
 
   const getStationName = (code) => {
@@ -208,6 +255,7 @@ export default function BookingPage() {
           <ul className={`md:flex md:gap-6 md:items-center ${mobileMenuOpen ? 'flex' : 'hidden'} md:flex-row flex-col absolute md:relative top-[70px] md:top-0 left-0 w-full md:w-auto bg-[#161b22] md:bg-transparent p-4 md:p-0`}>
             <li><Link href="/" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">Home</Link></li>
             <li><Link href="/#pnr-section" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">PNR Search</Link></li>
+            <li><Link href="/history" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all flex items-center gap-2"><i className="fas fa-history"></i>My Bookings</Link></li>
             <li><Link href="/#features" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">Features</Link></li>
             <li><Link href="/#about" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">About</Link></li>
             <li><Link href="/#pricing" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">Pricing</Link></li>

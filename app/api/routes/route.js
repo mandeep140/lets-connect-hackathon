@@ -8,10 +8,10 @@ const trains = [
     type: 'Express',
     stops: [
       { code: 'NDLS', name: 'New Delhi', arrival: '--', departure: '16:55', platform: '16', day: 1 },
-      { code: 'CNB', name: 'Kanpur Central', arrival: '22:00', departure: '22:10', platform: '4', day: 1 },
-      { code: 'PNBE', name: 'Patna Jn', arrival: '02:15', departure: '02:25', platform: '10', day: 2 },
-      { code: 'PRYJ', name: 'Parasnath', arrival: '04:30', departure: '04:32', platform: '2', day: 2 },
-      { code: 'HWH', name: 'Howrah Jn', arrival: '09:55', departure: '--', platform: '9', day: 2 }
+      { code: 'CNB', name: 'Kanpur Central', arrival: '18:30', departure: '18:35', platform: '4', day: 1 },
+      { code: 'PNBE', name: 'Patna Jn', arrival: '20:15', departure: '20:20', platform: '10', day: 1 },
+      { code: 'PRYJ', name: 'Parasnath', arrival: '21:45', departure: '21:47', platform: '2', day: 1 },
+      { code: 'HWH', name: 'Howrah Jn', arrival: '23:30', departure: '--', platform: '9', day: 1 }
     ]
   },
   { 
@@ -20,11 +20,11 @@ const trains = [
     type: 'Express',
     stops: [
       { code: 'MMCT', name: 'Mumbai Central', arrival: '--', departure: '17:00', platform: '8', day: 1 },
-      { code: 'SUR', name: 'Surat', arrival: '21:15', departure: '21:20', platform: '3', day: 1 },
-      { code: 'BRC', name: 'Vadodara Jn', arrival: '22:35', departure: '22:40', platform: '6', day: 1 },
-      { code: 'RTM', name: 'Ratlam Jn', arrival: '02:05', departure: '02:10', platform: '4', day: 2 },
-      { code: 'BPL', name: 'Bhopal Jn', arrival: '05:30', departure: '05:35', platform: '5', day: 2 },
-      { code: 'NDLS', name: 'New Delhi', arrival: '10:50', departure: '--', platform: '14', day: 2 }
+      { code: 'SUR', name: 'Surat', arrival: '18:45', departure: '18:50', platform: '3', day: 1 },
+      { code: 'BRC', name: 'Vadodara Jn', arrival: '19:55', departure: '20:00', platform: '6', day: 1 },
+      { code: 'RTM', name: 'Ratlam Jn', arrival: '21:30', departure: '21:35', platform: '4', day: 1 },
+      { code: 'BPL', name: 'Bhopal Jn', arrival: '23:15', departure: '23:20', platform: '5', day: 1 },
+      { code: 'NDLS', name: 'New Delhi', arrival: '01:10', departure: '--', platform: '14', day: 2 }
     ]
   },
   { 
@@ -33,9 +33,9 @@ const trains = [
     type: 'Express',
     stops: [
       { code: 'NDLS', name: 'New Delhi', arrival: '--', departure: '22:15', platform: '12', day: 1 },
-      { code: 'DHN', name: 'Dhanbad Jn', arrival: '07:45', departure: '07:50', platform: '3', day: 2 },
-      { code: 'ASN', name: 'Asansol Jn', arrival: '09:15', departure: '09:20', platform: '6', day: 2 },
-      { code: 'HWH', name: 'Howrah Jn', arrival: '13:10', departure: '--', platform: '23', day: 2 }
+      { code: 'DHN', name: 'Dhanbad Jn', arrival: '23:50', departure: '23:55', platform: '3', day: 1 },
+      { code: 'ASN', name: 'Asansol Jn', arrival: '01:15', departure: '01:20', platform: '6', day: 2 },
+      { code: 'HWH', name: 'Howrah Jn', arrival: '02:45', departure: '--', platform: '23', day: 2 }
     ]
   },
   { 
@@ -44,8 +44,8 @@ const trains = [
     type: 'Mail',
     stops: [
       { code: 'NDLS', name: 'New Delhi', arrival: '--', departure: '22:30', platform: '9', day: 1 },
-      { code: 'CNB', name: 'Kanpur Central', arrival: '04:15', departure: '04:25', platform: '7', day: 2 },
-      { code: 'LKO', name: 'Lucknow', arrival: '06:40', departure: '--', platform: '4', day: 2 }
+      { code: 'CNB', name: 'Kanpur Central', arrival: '00:15', departure: '00:20', platform: '7', day: 2 },
+      { code: 'LKO', name: 'Lucknow', arrival: '01:45', departure: '--', platform: '4', day: 2 }
     ]
   },
   { 
@@ -54,10 +54,10 @@ const trains = [
     type: 'Shatabdi',
     stops: [
       { code: 'NDLS', name: 'New Delhi', arrival: '--', departure: '06:00', platform: '10', day: 1 },
-      { code: 'AGC', name: 'Agra Cantt', arrival: '08:18', departure: '08:20', platform: '3', day: 1 },
-      { code: 'GWL', name: 'Gwalior Jn', arrival: '09:23', departure: '09:25', platform: '2', day: 1 },
-      { code: 'JHS', name: 'Jhansi Jn', arrival: '10:35', departure: '10:40', platform: '4', day: 1 },
-      { code: 'BPL', name: 'Bhopal Jn', arrival: '14:25', departure: '--', platform: '6', day: 1 }
+      { code: 'AGC', name: 'Agra Cantt', arrival: '07:35', departure: '07:37', platform: '3', day: 1 },
+      { code: 'GWL', name: 'Gwalior Jn', arrival: '08:28', departure: '08:30', platform: '2', day: 1 },
+      { code: 'JHS', name: 'Jhansi Jn', arrival: '09:20', departure: '09:25', platform: '4', day: 1 },
+      { code: 'BPL', name: 'Bhopal Jn', arrival: '11:15', departure: '--', platform: '6', day: 1 }
     ]
   },
   { 
@@ -66,11 +66,11 @@ const trains = [
     type: 'Superfast',
     stops: [
       { code: 'MAS', name: 'Chennai Central', arrival: '--', departure: '20:15', platform: '7', day: 1 },
-      { code: 'GNT', name: 'Guntur Jn', arrival: '03:25', departure: '03:30', platform: '3', day: 2 },
-      { code: 'BZA', name: 'Vijayawada Jn', arrival: '04:40', departure: '04:50', platform: '8', day: 2 },
-      { code: 'NGP', name: 'Nagpur', arrival: '14:55', departure: '15:05', platform: '5', day: 2 },
-      { code: 'BPL', name: 'Bhopal Jn', arrival: '22:00', departure: '22:10', platform: '4', day: 2 },
-      { code: 'NDLS', name: 'New Delhi', arrival: '04:45', departure: '--', platform: '16', day: 3 }
+      { code: 'GNT', name: 'Guntur Jn', arrival: '21:55', departure: '22:00', platform: '3', day: 1 },
+      { code: 'BZA', name: 'Vijayawada Jn', arrival: '23:15', departure: '23:20', platform: '8', day: 1 },
+      { code: 'NGP', name: 'Nagpur', arrival: '01:05', departure: '01:10', platform: '5', day: 2 },
+      { code: 'BPL', name: 'Bhopal Jn', arrival: '02:50', departure: '02:55', platform: '4', day: 2 },
+      { code: 'NDLS', name: 'New Delhi', arrival: '04:45', departure: '--', platform: '16', day: 2 }
     ]
   },
   { 
@@ -80,12 +80,12 @@ const trains = [
     stops: [
       { code: 'MMCT', name: 'Mumbai Central', arrival: '--', departure: '19:05', platform: '4', day: 1 },
       { code: 'BVI', name: 'Borivali', arrival: '19:35', departure: '19:37', platform: '6', day: 1 },
-      { code: 'ST', name: 'Surat', arrival: '23:15', departure: '23:20', platform: '2', day: 1 },
-      { code: 'ADI', name: 'Ahmedabad Jn', arrival: '01:50', departure: '02:00', platform: '5', day: 2 },
-      { code: 'ABR', name: 'Abu Road', arrival: '06:05', departure: '06:15', platform: '1', day: 2 },
-      { code: 'AII', name: 'Ajmer Jn', arrival: '09:25', departure: '09:30', platform: '3', day: 2 },
-      { code: 'JP', name: 'Jaipur', arrival: '11:45', departure: '11:55', platform: '4', day: 2 },
-      { code: 'NDLS', name: 'New Delhi', arrival: '17:10', departure: '--', platform: '11', day: 2 }
+      { code: 'ST', name: 'Surat', arrival: '21:00', departure: '21:05', platform: '2', day: 1 },
+      { code: 'ADI', name: 'Ahmedabad Jn', arrival: '22:30', departure: '22:35', platform: '5', day: 1 },
+      { code: 'ABR', name: 'Abu Road', arrival: '00:05', departure: '00:10', platform: '1', day: 2 },
+      { code: 'AII', name: 'Ajmer Jn', arrival: '01:35', departure: '01:40', platform: '3', day: 2 },
+      { code: 'JP', name: 'Jaipur', arrival: '03:00', departure: '03:05', platform: '4', day: 2 },
+      { code: 'NDLS', name: 'New Delhi', arrival: '04:50', departure: '--', platform: '11', day: 2 }
     ]
   },
   { 
@@ -94,10 +94,10 @@ const trains = [
     type: 'Duronto',
     stops: [
       { code: 'SDAH', name: 'Sealdah', arrival: '--', departure: '20:50', platform: '9', day: 1 },
-      { code: 'BWN', name: 'Barddhaman Jn', arrival: '22:35', departure: '22:37', platform: '4', day: 1 },
-      { code: 'DHN', name: 'Dhanbad Jn', arrival: '01:20', departure: '01:22', platform: '5', day: 2 },
-      { code: 'PNBE', name: 'Patna Jn', arrival: '05:00', departure: '05:10', platform: '8', day: 2 },
-      { code: 'MGS', name: 'Mughal Sarai Jn', arrival: '08:15', departure: '--', platform: '6', day: 2 }
+      { code: 'BWN', name: 'Barddhaman Jn', arrival: '22:05', departure: '22:07', platform: '4', day: 1 },
+      { code: 'DHN', name: 'Dhanbad Jn', arrival: '23:35', departure: '23:37', platform: '5', day: 1 },
+      { code: 'PNBE', name: 'Patna Jn', arrival: '01:20', departure: '01:25', platform: '8', day: 2 },
+      { code: 'MGS', name: 'Mughal Sarai Jn', arrival: '03:05', departure: '--', platform: '6', day: 2 }
     ]
   },
   { 

@@ -262,6 +262,9 @@ export default function Home() {
           <ul className={`md:flex md:gap-6 md:items-center ${mobileMenuOpen ? 'flex' : 'hidden'} md:flex-row flex-col absolute md:relative top-[70px] md:top-0 left-0 w-full md:w-auto bg-[#161b22] md:bg-transparent p-4 md:p-0`}>
             <li><a href="#home" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">Home</a></li>
             <li><a href="#pnr-section" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">PNR Search</a></li>
+            {session?.user && (
+              <li><Link href="/history" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all flex items-center gap-2"><i className="fas fa-history"></i>My Bookings</Link></li>
+            )}
             <li><a href="#features" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">Features</a></li>
             <li><a href="#about" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">About</a></li>
             {session?.user && (
@@ -345,6 +348,14 @@ export default function Home() {
                       </div>
                       
                       <div className="p-2">
+                        <Link
+                          href="/history"
+                          onClick={() => setShowProfileDropdown(false)}
+                          className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#0d1117] transition-all"
+                        >
+                          <i className="fas fa-history w-5 text-[#8b949e]"></i>
+                          <span>My Bookings</span>
+                        </Link>
                         <Link
                           href="/admin"
                           onClick={() => setShowProfileDropdown(false)}
