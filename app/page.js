@@ -32,6 +32,7 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedPassengers, setSelectedPassengers] = useState([]);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
   // Fetch PNRs from database
   useEffect(() => {
@@ -75,6 +76,18 @@ export default function Home() {
 
     fetchUserDetails();
   }, [session?.user?.email, status]); // Removed 'update' from dependencies
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (showProfileDropdown && !e.target.closest('.relative')) {
+        setShowProfileDropdown(false);
+      }
+    };
+    
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showProfileDropdown]);
 
   const handlePNRInput = (e) => {
     const value = e.target.value.replace(/[^0-9]/g, '');
@@ -271,23 +284,106 @@ export default function Home() {
           <div className="flex items-center gap-4">
             {session?.user ? (
               <>
-                <div className="hidden md:flex items-center gap-2 px-3 py-2 bg-[#161b22] border border-[#30363d] rounded-xl">
-                  <i className={`fas fa-user-circle ${(userDetails?.isVerified || session.user.isVerified) ? 'text-[#238636]' : 'text-[#8b949e]'}`}></i>
-                  <span className="text-sm">{session.user.name}</span>
-                  {(userDetails?.isVerified || session.user.isVerified) && (
-                    <i className="fas fa-badge-check text-[#238636] ml-1" title="Verified User"></i>
+                <div className="hidden md:block relative">
+                  <button
+                    onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                    className="flex items-center gap-2 px-3 py-2 bg-[#161b22] border border-[#30363d] rounded-xl hover:border-[#238636] transition-all"
+                  >
+                    <i className={`fas fa-user-circle ${(userDetails?.isVerified || session.user.isVerified) ? 'text-[#238636]' : 'text-[#8b949e]'}`}></i>
+                    <span className="text-sm">{session.user.name}</span>
+                    {(userDetails?.isVerified || session.user.isVerified) && (
+                      <i className="fas fa-badge-check text-[#238636] ml-1" title="Verified User"></i>
+                    )}
+                    <i className={`fas fa-chevron-down text-xs transition-transform ${showProfileDropdown ? 'rotate-180' : ''}`}></i>
+                  </button>
+
+                  {showProfileDropdown && (
+                    <div className="absolute right-0 top-full mt-2 w-80 bg-[#161b22] border border-[#30363d] rounded-xl shadow-xl z-50 overflow-hidden">
+                      <div className="p-4 border-b border-[#30363d]">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className={`w-12 h-12 rounded-full ${(userDetails?.isVerified || session.user.isVerified) ? 'bg-[#238636]' : 'bg-[#8b949e]'} flex items-center justify-center text-white text-xl`}>
+                            {session.user.name?.charAt(0).toUpperCase()}
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-bold flex items-center gap-2">
+                              {session.user.name}
+                              {(userDetails?.isVerified || session.user.isVerified) && (
+                                <i className="fas fa-badge-check text-[#238636]" title="Verified User"></i>
+                              )}
+                            </div>
+                            <div className="text-xs text-[#8b949e]">{session.user.email}</div>
+                          </div>
+                        </div>
+
+                        {/* User Details */}
+                        <div className="space-y-2 mb-3 text-sm">
+                          <div className="flex items-center gap-2 text-[#8b949e]">
+                            <i className="fas fa-phone w-4"></i>
+                            <span>{userDetails?.phone || session.user.phone || 'Not provided'}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-[#8b949e]">
+                            <i className="fas fa-birthday-cake w-4"></i>
+                            <span>Age: {userDetails?.age || session.user.age || 'Not provided'}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-[#8b949e]">
+                            <i className="fas fa-tag w-4"></i>
+                            <span className="capitalize">{userDetails?.preferences || session.user.preferences || 'Standard'} Preference</span>
+                          </div>
+                        </div>
+
+                        {(userDetails?.isVerified || session.user.isVerified) ? (
+                          <div className="px-3 py-2 bg-[#238636]/10 border border-[#238636]/30 rounded-lg text-xs flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-[#238636]">
+                              <i className="fas fa-shield-check"></i>
+                              <span>Verified via {userDetails?.verificationMethod || 'Document'}</span>
+                            </div>
+                            {userDetails?.verifiedAt && (
+                              <span className="text-[#8b949e]">
+                                {new Date(userDetails.verifiedAt).toLocaleDateString()}
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <Link
+                            href="/verify"
+                            onClick={() => setShowProfileDropdown(false)}
+                            className="block w-full px-3 py-2 bg-[#238636] hover:bg-[#2ea043] text-white text-center rounded-lg text-sm font-semibold transition-all"
+                          >
+                            <i className="fas fa-shield-check mr-2"></i>
+                            Verify Account
+                          </Link>
+                        )}
+                      </div>
+                      
+                      <div className="p-2">
+                        <Link
+                          href="/admin"
+                          onClick={() => setShowProfileDropdown(false)}
+                          className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#0d1117] transition-all"
+                        >
+                          <i className="fas fa-cog w-5 text-[#8b949e]"></i>
+                          <span>Admin Panel</span>
+                        </Link>
+                        <button
+                          onClick={() => {
+                            setShowProfileDropdown(false);
+                            handleLogout();
+                          }}
+                          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#0d1117] text-[#da3633] transition-all"
+                        >
+                          <i className="fas fa-sign-out-alt w-5"></i>
+                          <span>Logout</span>
+                        </button>
+                      </div>
+                    </div>
                   )}
                 </div>
                 {!(userDetails?.isVerified || session.user.isVerified) && (
-                  <Link href="/verify" className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200">
+                  <Link href="/verify" className="md:hidden items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200">
                     <i className="fas fa-shield-check"></i>
                     Verify Now
                   </Link>
                 )}
-                <button onClick={handleLogout} className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl border border-[#da3633] text-[#da3633] hover:bg-[#da3633] hover:text-white transition-all">
-                  <i className="fas fa-sign-out-alt"></i>
-                  Logout
-                </button>
               </>
             ) : (
               <>
@@ -867,6 +963,19 @@ export default function Home() {
                         className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl focus:outline-none focus:border-[#238636]"
                       />
                     </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-2">Travel Preference</label>
+                    <select
+                      value={registerForm.preferences}
+                      onChange={(e) => setRegisterForm({...registerForm, preferences: e.target.value})}
+                      required
+                      className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl focus:outline-none focus:border-[#238636]"
+                    >
+                      <option value="economy">Economy - Budget-friendly travel</option>
+                      <option value="premium">Premium - Comfortable journey</option>
+                      <option value="luxury">Luxury - First-class experience</option>
+                    </select>
                   </div>
                   <button 
                     type="submit" 
