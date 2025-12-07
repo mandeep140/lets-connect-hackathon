@@ -406,7 +406,7 @@ export default function Home() {
       </div>
 
       {/* Header */}
-      <header className="fixed top-0 w-full bg-[rgba(13,17,23,0.95)] backdrop-blur-md border-b border-[#30363d] z-50">
+      <header className="fixed top-0 w-full bg-[rgba(13,17,23,0.95)] backdrop-blur-md border-b border-[#30363d] z-50 transition-all duration-300">
         <nav className="max-w-7xl mx-auto px-4 flex items-center justify-between h-[70px]">
           <div className="flex items-center gap-2 text-xl font-bold">
             <i className="fas fa-route text-[#238636] text-2xl"></i>
@@ -419,7 +419,6 @@ export default function Home() {
             <li><a href="#features" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">Features</a></li>
             <li><a href="#about" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">About</a></li>
             <li><a href="#pricing" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">Pricing</a></li>
-            <li><a href="#future" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">Future</a></li>
             <li><a href="#contact" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">Contact</a></li>
           </ul>
 
@@ -428,10 +427,10 @@ export default function Home() {
               <i className="fas fa-user-plus"></i>
               Register
             </button>
-            <button className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold hover:shadow-lg transition-all">
+            <Link href="/verify" className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200">
               <i className="fas fa-shield-check"></i>
               Verify Now
-            </button>
+            </Link>
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2">
               <div className="w-5 flex flex-col gap-1">
                 <span className="h-0.5 bg-white rounded"></span>
@@ -446,7 +445,7 @@ export default function Home() {
       {/* Hero Section */}
       <section id="home" className="pt-[100px] min-h-screen flex items-center relative">
         <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6 animate-fadeInUp">
+          <div className="space-y-6">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#161b22] border border-[#30363d] rounded-full text-sm">
               <i className="fas fa-train text-[#238636]"></i>
               <span>Revolutionizing Indian Railways</span>
@@ -512,10 +511,10 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="bg-[#0d1117] border border-[#30363d] rounded-2xl p-8 shadow-xl">
+          <div className="bg-[#0d1117] border border-[#30363d] rounded-2xl p-8 shadow-xl transition-all duration-300">
             <div className="flex gap-2 mb-4">
               <div className="flex-1 relative">
-                <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-[#8b949e]"></i>
+                <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-[#8b949e] transition-colors duration-200"></i>
                 <input
                   type="text"
                   value={pnrInput}
@@ -523,13 +522,13 @@ export default function Home() {
                   onKeyPress={(e) => e.key === 'Enter' && !isSearching && searchPNR()}
                   placeholder="Enter 10-digit PNR (e.g., 6223456789)"
                   maxLength={10}
-                  className="w-full pl-12 pr-4 py-4 bg-[#161b22] border border-[#30363d] rounded-xl text-white focus:outline-none focus:border-[#238636] transition-all"
+                  className="w-full pl-12 pr-4 py-4 bg-[#161b22] border border-[#30363d] rounded-xl text-white focus:outline-none focus:border-[#238636] focus:ring-2 focus:ring-[#238636]/20 transition-all duration-200 hover:border-[#238636]/50"
                 />
               </div>
               <button
                 onClick={() => searchPNR()}
                 disabled={isSearching}
-                className="px-8 py-4 bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold rounded-xl hover:shadow-lg transition-all disabled:opacity-50"
+                className="px-8 py-4 bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#238636]/50 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSearching ? (
                   <><i className="fas fa-spinner fa-spin mr-2"></i>Searching...</>
@@ -540,7 +539,7 @@ export default function Home() {
             </div>
 
             {pnrMessage && (
-              <div className={`text-sm mt-2 ${messageType === 'success' ? 'text-[#2ea043]' : messageType === 'error' ? 'text-[#da3633]' : 'text-[#8b949e]'}`}>
+              <div className={`text-sm mt-2 animate-fade-in ${messageType === 'success' ? 'text-[#2ea043]' : messageType === 'error' ? 'text-[#da3633]' : 'text-[#8b949e]'}`}>
                 {pnrMessage}
               </div>
             )}
@@ -559,8 +558,7 @@ export default function Home() {
                 <div
                   key={pnr.pnr}
                   onClick={() => handleDemoPNRClick(pnr.pnr)}
-                  className="bg-[#161b22] border border-[#30363d] rounded-xl p-4 cursor-pointer hover:border-[#238636] hover:shadow-lg transition-all"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                  className="bg-[#161b22] border border-[#30363d] rounded-xl p-4 cursor-pointer hover:border-[#238636] hover:shadow-lg hover:shadow-[#238636]/20 hover:-translate-y-1 active:scale-98 transition-all duration-200"
                 >
                   <h4 className="font-bold text-[#238636] mb-2">{pnr.pnr}</h4>
                   <p className="font-semibold text-sm mb-1">{pnr.train}</p>
@@ -578,17 +576,17 @@ export default function Home() {
 
       {/* Journey Results */}
       {showResults && currentPNRData && (
-        <section id="journey-results" className="py-20">
+        <section id="journey-results" className="py-20 animate-fade-in">
           <div className="max-w-6xl mx-auto px-4">
             <div className="bg-gradient-to-r from-[#238636] to-[#2ea043] rounded-2xl p-8 mb-8 text-white">
-              <div className="flex items-center gap-4 mb-4">
-                <i className="fas fa-check-circle text-5xl"></i>
-                <div>
-                  <h3 className="text-2xl font-bold">PNR Found Successfully!</h3>
-                  <p>We've got you covered. Let us handle the virtual queues and bring your next tickets right to your seat.</p>
+                <div className="flex items-center gap-4 mb-4">
+                  <i className="fas fa-check-circle text-5xl"></i>
+                  <div>
+                    <h3 className="text-2xl font-bold">PNR Found Successfully!</h3>
+                    <p>We've got you covered. Let us handle the virtual queues and bring your next tickets right to your seat.</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
             <div className="bg-[#161b22] border border-[#30363d] rounded-2xl p-8 mb-8">
               <h3 className="text-2xl font-bold mb-4">{currentPNRData.train}</h3>
@@ -603,7 +601,7 @@ export default function Home() {
                 Passengers
                 <button
                   onClick={selectAllPassengers}
-                  className="ml-auto text-sm px-4 py-2 bg-[#0d1117] border border-[#30363d] rounded-lg hover:border-[#238636] transition-all"
+                  className="ml-auto text-sm px-4 py-2 bg-[#0d1117] border border-[#30363d] rounded-lg hover:border-[#238636] hover:bg-[#161b22] active:scale-95 transition-all duration-200"
                 >
                   {selectedPassengers.length === currentPNRData.passengers.length ? (
                     <><i className="fas fa-times mr-2"></i>Deselect All</>
@@ -627,10 +625,10 @@ export default function Home() {
                   <div
                     key={index}
                     onClick={() => togglePassengerSelection(index)}
-                    className={`bg-[#0d1117] border ${selectedPassengers.includes(index) ? 'border-[#238636] shadow-lg' : 'border-[#30363d]'} rounded-xl p-4 cursor-pointer hover:border-[#238636] transition-all relative`}
+                    className={`bg-[#0d1117] border ${selectedPassengers.includes(index) ? 'border-[#238636] shadow-lg shadow-[#238636]/30' : 'border-[#30363d]'} rounded-xl p-4 cursor-pointer hover:border-[#238636] hover:-translate-y-1 active:scale-98 transition-all duration-200 relative`}
                   >
                     <div className="absolute top-3 right-3">
-                      <div className={`w-6 h-6 rounded border-2 ${selectedPassengers.includes(index) ? 'bg-[#238636] border-[#238636]' : 'border-[#30363d]'} flex items-center justify-center transition-all`}>
+                      <div className={`w-6 h-6 rounded border-2 ${selectedPassengers.includes(index) ? 'bg-[#238636] border-[#238636] scale-110' : 'border-[#30363d]'} flex items-center justify-center transition-all duration-200 hover:scale-110`}>
                         {selectedPassengers.includes(index) && (
                           <i className="fas fa-check text-white text-xs"></i>
                         )}
@@ -665,9 +663,9 @@ export default function Home() {
                   <div
                     key={index}
                     onClick={() => handleConnectionBooking(connection)}
-                    className={`bg-[#0d1117] border border-[#30363d] rounded-xl p-6 ${selectedPassengers.length > 0 ? 'cursor-pointer hover:border-[#238636] hover:shadow-lg' : 'opacity-50 cursor-not-allowed'} transition-all text-center`}
+                    className={`bg-[#0d1117] border border-[#30363d] rounded-xl p-6 ${selectedPassengers.length > 0 ? 'cursor-pointer hover:border-[#238636] hover:shadow-lg hover:shadow-[#238636]/30 hover:-translate-y-2 active:scale-95' : 'opacity-50 cursor-not-allowed'} transition-all duration-200 text-center`}
                   >
-                    <div className="text-4xl text-[#238636] mb-3">
+                    <div className="text-4xl text-[#238636] mb-3 transition-transform duration-200 hover:scale-110">
                       <i className={`fas ${connection.icon}`}></i>
                     </div>
                     <h4 className="font-bold mb-2">{connection.type}</h4>
@@ -707,8 +705,11 @@ export default function Home() {
               { icon: 'fa-users', title: 'Family-Friendly', desc: 'Designed for families and group travelers with shared booking and coordinated journeys.' },
               { icon: 'fa-brain', title: 'AI-Powered Suggestions', desc: 'Smart recommendations based on your travel patterns, preferences, and real-time conditions.' }
             ].map((feature, index) => (
-              <div key={index} className="bg-[#0d1117] border border-[#30363d] rounded-xl p-6 hover:border-[#238636] transition-all">
-                <div className="text-4xl text-[#238636] mb-4">
+              <div 
+                key={index}
+                className="bg-[#0d1117] border border-[#30363d] rounded-xl p-6 hover:border-[#238636] hover:shadow-lg hover:shadow-[#238636]/20 hover:-translate-y-2 transition-all duration-300 group"
+              >
+                <div className="text-4xl text-[#238636] mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
                   <i className={`fas ${feature.icon}`}></i>
                 </div>
                 <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
@@ -732,25 +733,25 @@ export default function Home() {
                 complex transport ecosystem.
               </p>
               
-              <div className="grid grid-cols-3 gap-4 mt-8">
+              {/* <div className="grid grid-cols-3 gap-4 mt-8">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-[#238636]">2</div>
+                  <div className="text-3xl font-bold text-[#238636]">5</div>
                   <div className="text-sm text-[#8b949e]">Team Members</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-[#238636]">2</div>
+                  <div className="text-3xl font-bold text-[#238636]">1</div>
                   <div className="text-sm text-[#8b949e]">Days Development</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#238636]">10K+</div>
                   <div className="text-sm text-[#8b949e]">Lines of Code</div>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="bg-[#161b22] border border-[#30363d] rounded-2xl p-8 text-center">
               <i className="fas fa-users-cog text-[100px] text-[#238636] mb-4"></i>
-              <h3 className="text-2xl font-bold mb-4">IIT Patna Team</h3>
+              <h3 className="text-2xl font-bold mb-4">IIT Patna MindMesh Team</h3>
               <p className="text-[#8b949e]">
                 Transforming India's travel experience with cutting-edge technology and innovative solutions.
               </p>
@@ -760,7 +761,7 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-20 bg-[#161b22]">
+      {/* <section id="pricing" className="py-20 bg-[#161b22]">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">Choose Your Plan</h2>
@@ -775,7 +776,10 @@ export default function Home() {
               { name: 'Premium', price: '199', features: ['Everything in Basic', 'Unlimited Searches', 'Real-time Notifications', 'Priority Booking', '24/7 Phone Support'], featured: true },
               { name: 'Enterprise', price: '999', features: ['Everything in Premium', 'API Access', 'Custom Integration', 'Dedicated Support', 'White-label Solution'], featured: false }
             ].map((plan, index) => (
-              <div key={index} className={`bg-[#0d1117] border ${plan.featured ? 'border-[#238636]' : 'border-[#30363d]'} rounded-xl p-8 relative ${plan.featured ? 'scale-105' : ''}`}>
+              <div 
+                key={index}
+                className={`bg-[#0d1117] border ${plan.featured ? 'border-[#238636] shadow-lg shadow-[#238636]/20' : 'border-[#30363d]'} rounded-xl p-8 relative ${plan.featured ? 'scale-105' : ''} hover:-translate-y-3 hover:shadow-xl transition-all duration-300`}
+              >
                 {plan.featured && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#238636] text-white px-4 py-1 rounded-full text-sm font-semibold">
                     Most Popular
@@ -795,46 +799,16 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <button className={`w-full py-3 rounded-xl font-semibold transition-all ${plan.featured ? 'bg-gradient-to-br from-[#238636] to-[#2ea043] text-white hover:shadow-lg' : 'border border-[#238636] text-[#238636] hover:bg-[#238636] hover:text-white'}`}>
+                <button 
+                  className={`w-full py-3 rounded-xl font-semibold hover:scale-105 active:scale-95 transition-all duration-200 ${plan.featured ? 'bg-gradient-to-br from-[#238636] to-[#2ea043] text-white hover:shadow-lg hover:shadow-[#238636]/50' : 'border border-[#238636] text-[#238636] hover:bg-[#238636] hover:text-white'}`}
+                >
                   {plan.name === 'Basic' ? 'Get Started' : plan.name === 'Premium' ? 'Choose Premium' : 'Contact Sales'}
                 </button>
               </div>
             ))}
           </div>
         </div>
-      </section>
-
-      {/* Future Roadmap */}
-      <section id="future" className="py-20">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">Future Roadmap</h2>
-            <p className="text-[#8b949e]">
-              Exciting features and expansions coming to Let's Connect.
-            </p>
-          </div>
-
-          <div className="space-y-8">
-            {[
-              { quarter: 'Q2 2025', icon: 'fa-brain', title: 'AI-Powered Journey Optimization', desc: 'Smart route recommendations based on real-time traffic, weather, and crowd data using machine learning algorithms.' },
-              { quarter: 'Q3 2025', icon: 'fa-globe', title: 'Multi-Language Support', desc: 'Full localization in 8 Indian languages including Hindi, Tamil, Telugu, Bengali, Marathi, Gujarati, Kannada, and Malayalam.' },
-              { quarter: 'Q4 2025', icon: 'fa-mobile-alt', title: 'Offline Mode & PWA', desc: 'Download journey plans, access tickets offline, and enjoy a native app experience with our Progressive Web App.' },
-              { quarter: 'Q1 2026', icon: 'fa-robot', title: 'Voice Assistant Integration', desc: 'Book tickets, check PNR status, and get journey updates through voice commands in multiple Indian languages.' }
-            ].map((item, index) => (
-              <div key={index} className="flex gap-6 items-start">
-                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-[#238636] to-[#2ea043] rounded-xl flex items-center justify-center text-2xl">
-                  <i className={`fas ${item.icon}`}></i>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">{item.quarter}</h3>
-                  <h4 className="text-lg font-semibold text-[#238636] mb-2">{item.title}</h4>
-                  <p className="text-[#8b949e]">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      </section> */}
 
       {/* Contact Section */}
       <section id="contact" className="py-20 bg-[#161b22]">
@@ -948,8 +922,14 @@ export default function Home() {
 
       {/* Register Modal */}
       {showRegisterModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-[#161b22] border border-[#30363d] rounded-2xl max-w-md w-full p-8 relative">
+        <div 
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in"
+          onClick={() => setShowRegisterModal(false)}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-[#161b22] border border-[#30363d] rounded-2xl max-w-md w-full p-8 relative animate-scale-in"
+          >
             <button
               onClick={() => setShowRegisterModal(false)}
               className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center hover:bg-[#0d1117] rounded-lg transition-all"
@@ -1001,7 +981,10 @@ export default function Home() {
                       className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl focus:outline-none focus:border-[#238636]"
                     />
                   </div>
-                  <button type="submit" className="w-full py-3 bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold rounded-xl hover:shadow-lg transition-all">
+                  <button 
+                    type="submit" 
+                    className="w-full py-3 bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#238636]/50 hover:scale-105 active:scale-95 transition-all duration-200"
+                  >
                     <i className="fas fa-user-plus mr-2"></i>
                     Register Now
                   </button>
@@ -1017,7 +1000,7 @@ export default function Home() {
                     setShowRegisterModal(false);
                     setShowWelcome(false);
                   }}
-                  className="px-6 py-3 bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+                  className="px-6 py-3 bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#238636]/50 hover:scale-105 active:scale-95 transition-all duration-200"
                 >
                   <i className="fas fa-rocket mr-2"></i>
                   Start Your Journey
