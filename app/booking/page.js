@@ -3,33 +3,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-// Journey options data
-const journeyOptions = [
-  { id: 1, type: 'train', icon: 'fa-train', title: 'Local EMU', provider: 'Indian Railways', price: 15, duration: '25 min', departure: '18:30', rating: 4.2, features: ['Reserved Seating', 'AC Coach', 'Multiple Stops'], route: 'Howrah → Kharagpur', availability: 'Available' },
-  { id: 2, type: 'train', icon: 'fa-train', title: 'MEMU Express', provider: 'Indian Railways', price: 25, duration: '35 min', departure: '19:15', rating: 4.0, features: ['Express Service', 'Limited Stops', 'Comfortable'], route: 'Howrah → Kharagpur', availability: 'Available' },
-  { id: 3, type: 'metro', icon: 'fa-subway', title: 'Delhi Metro Blue Line', provider: 'DMRC', price: 45, duration: '40 min', departure: 'Every 3 min', rating: 4.5, features: ['AC Coaches', 'Frequent Service', 'WiFi'], route: 'New Delhi → Dwarka', availability: 'Available' },
-  { id: 4, type: 'metro', icon: 'fa-subway', title: 'Kolkata Metro', provider: 'Metro Railway', price: 12, duration: '30 min', departure: 'Every 5 min', rating: 4.3, features: ['Underground', 'Quick Transit', 'Safe'], route: 'Howrah → Dum Dum', availability: 'Available' },
-  { id: 5, type: 'cab', icon: 'fa-car', title: 'Uber Go', provider: 'Uber', price: 180, duration: '45 min', departure: '5 min pickup', rating: 4.4, features: ['Door-to-door', 'GPS Tracking', 'Cashless'], route: 'Station → Destination', availability: 'Available' },
-  { id: 6, type: 'cab', icon: 'fa-car', title: 'Ola Prime', provider: 'Ola', price: 220, duration: '45 min', departure: '3 min pickup', rating: 4.3, features: ['Premium Car', 'AC', 'Professional Driver'], route: 'Station → Destination', availability: 'Available' },
-  { id: 7, type: 'cab', icon: 'fa-car', title: 'Uber Premier', provider: 'Uber', price: 280, duration: '40 min', departure: '7 min pickup', rating: 4.6, features: ['Luxury Vehicle', 'Top-rated Driver', 'WiFi'], route: 'Station → Destination', availability: 'Available' },
-  { id: 8, type: 'bus', icon: 'fa-bus', title: 'State Transport', provider: 'WBSTC', price: 35, duration: '55 min', departure: '18:45', rating: 3.8, features: ['AC Bus', 'Multiple Stops', 'Affordable'], route: 'Howrah → Kharagpur', availability: 'Available' },
-  { id: 9, type: 'bus', icon: 'fa-bus', title: 'Volvo AC', provider: 'Private Operator', price: 85, duration: '50 min', departure: '19:30', rating: 4.1, features: ['Luxury AC', 'Comfortable Seats', 'Entertainment'], route: 'Howrah → Kharagpur', availability: 'Available' },
-  { id: 10, type: 'bus', icon: 'fa-bus', title: 'ZingBus Premium', provider: 'ZingBus', price: 150, duration: '45 min', departure: '20:00', rating: 4.4, features: ['Premium Service', 'WiFi', 'Charging Points'], route: 'Howrah → Kharagpur', availability: 'Available' },
-  { id: 11, type: 'auto', icon: 'fa-motorcycle', title: 'Shared Auto', provider: 'Local Operator', price: 25, duration: '35 min', departure: 'Immediate', rating: 3.5, features: ['Shared Ride', 'Local Knowledge', 'Affordable'], route: 'Station → Nearby Areas', availability: 'Available' },
-  { id: 12, type: 'auto', icon: 'fa-motorcycle', title: 'Private Auto', provider: 'Local Driver', price: 80, duration: '30 min', departure: 'Immediate', rating: 3.9, features: ['Private Ride', 'Direct Route', 'Quick'], route: 'Station → Destination', availability: 'Available' },
-  { id: 13, type: 'train', icon: 'fa-train', title: 'Passenger Train', provider: 'Indian Railways', price: 8, duration: '1h 10min', departure: '20:30', rating: 3.6, features: ['Economical', 'Multiple Stops', 'General Class'], route: 'Howrah → Kharagpur', availability: 'Available' },
-  { id: 14, type: 'cab', icon: 'fa-car', title: 'Outstation Cab', provider: 'Savaari', price: 450, duration: '40 min', departure: '15 min pickup', rating: 4.2, features: ['Long Distance', 'Experienced Driver', 'Fuel Included'], route: 'Station → Outstation', availability: 'Available' },
-  { id: 15, type: 'bus', icon: 'fa-bus', title: 'City Bus', provider: 'Municipal Corp', price: 12, duration: '1h 15min', departure: '19:00', rating: 3.4, features: ['Public Transport', 'Eco-friendly', 'Budget'], route: 'Station → City Center', availability: 'Available' },
-  { id: 16, type: 'metro', icon: 'fa-subway', title: 'Airport Metro', provider: 'Airport Express', price: 65, duration: '35 min', departure: 'Every 10 min', rating: 4.6, features: ['Direct Airport', 'Luggage Space', 'Fast'], route: 'Station → Airport', availability: 'Available' },
-  { id: 17, type: 'cab', icon: 'fa-car', title: 'Bike Taxi', provider: 'Rapido', price: 45, duration: '25 min', departure: '2 min pickup', rating: 4.1, features: ['Quick', 'Traffic-friendly', 'Affordable'], route: 'Station → Nearby', availability: 'Available' },
-  { id: 18, type: 'bus', icon: 'fa-bus', title: 'Express Bus', provider: 'RedBus', price: 120, duration: '42 min', departure: '21:15', rating: 4.2, features: ['Express Service', 'Online Booking', 'AC'], route: 'Station → Main City', availability: 'Available' },
-  { id: 19, type: 'train', icon: 'fa-train', title: 'Suburban Express', provider: 'Indian Railways', price: 22, duration: '28 min', departure: '22:00', rating: 4.0, features: ['Evening Service', 'AC Available', 'Reserved'], route: 'Howrah → Suburban', availability: 'Available' },
-  { id: 20, type: 'cab', icon: 'fa-car', title: 'Luxury Sedan', provider: 'Meru', price: 350, duration: '38 min', departure: '10 min pickup', rating: 4.7, features: ['Luxury Car', 'Chauffeur', 'Premium'], route: 'Station → Destination', availability: 'Available' }
-];
-
 export default function BookingPage() {
   const [currentService, setCurrentService] = useState('all');
-  const [filteredOptions, setFilteredOptions] = useState(journeyOptions);
+  const [journeyOptions, setJourneyOptions] = useState([]);
+  const [filteredOptions, setFilteredOptions] = useState([]);
   const [displayedCount, setDisplayedCount] = useState(8);
   const [currentPNRData, setCurrentPNRData] = useState(null);
   const [showBookingModal, setShowBookingModal] = useState(false);
@@ -47,7 +24,28 @@ export default function BookingPage() {
       const storedPNRData = sessionStorage.getItem('currentPNRData');
       
       if (storedPNRData) {
-        setCurrentPNRData(JSON.parse(storedPNRData));
+        const pnrData = JSON.parse(storedPNRData);
+        setCurrentPNRData(pnrData);
+        
+        // Convert PNR connections to journey options
+        if (pnrData.connections && pnrData.connections.length > 0) {
+          const options = pnrData.connections.map((conn, index) => ({
+            id: index + 1,
+            type: conn.type.toLowerCase().replace(/\s+/g, '-'),
+            icon: conn.icon,
+            title: conn.type,
+            provider: getProviderFromType(conn.type),
+            price: getPriceEstimate(conn.type),
+            duration: getDurationEstimate(conn.type),
+            departure: getDepartureTime(conn.type),
+            rating: (4.0 + Math.random()).toFixed(1),
+            features: conn.description ? [conn.description, 'Available Now', 'Verified'] : ['Available', 'Verified'],
+            route: pnrData.route || 'Station → Destination',
+            availability: 'Available',
+            description: conn.description
+          }));
+          setJourneyOptions(options);
+        }
       } else if (pnr) {
         setCurrentPNRData({
           pnr: pnr,
@@ -62,6 +60,50 @@ export default function BookingPage() {
       }
     }
   }, []);
+
+  const getProviderFromType = (type) => {
+    const providers = {
+      'Metro': 'Metro Railway',
+      'Local Train': 'Indian Railways',
+      'Cab': 'Ride Services',
+      'Bus': 'Transport Corporation',
+      'Auto': 'Local Operators',
+      'Taxi': 'Cab Services'
+    };
+    return providers[type] || 'Service Provider';
+  };
+
+  const getPriceEstimate = (type) => {
+    const prices = {
+      'Metro': Math.floor(30 + Math.random() * 40),
+      'Local Train': Math.floor(15 + Math.random() * 30),
+      'Cab': Math.floor(150 + Math.random() * 200),
+      'Bus': Math.floor(25 + Math.random() * 60),
+      'Auto': Math.floor(40 + Math.random() * 80),
+      'Taxi': Math.floor(200 + Math.random() * 150)
+    };
+    return prices[type] || Math.floor(50 + Math.random() * 100);
+  };
+
+  const getDurationEstimate = (type) => {
+    const durations = {
+      'Metro': '35 min',
+      'Local Train': '40 min',
+      'Cab': '45 min',
+      'Bus': '55 min',
+      'Auto': '30 min',
+      'Taxi': '40 min'
+    };
+    return durations[type] || '45 min';
+  };
+
+  const getDepartureTime = (type) => {
+    if (type.includes('Metro')) return 'Every 5 min';
+    if (type.includes('Train')) return 'Check Schedule';
+    if (type.includes('Cab') || type.includes('Auto') || type.includes('Taxi')) return 'On Demand';
+    if (type.includes('Bus')) return 'Every 15 min';
+    return 'Available';
+  };
 
   useEffect(() => {
     filterAndSortOptions();

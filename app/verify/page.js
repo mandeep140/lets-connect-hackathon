@@ -1,48 +1,72 @@
 'use client';
 
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function VerifyPage() {
+  const { data: session, update } = useSession();
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [verificationMethod, setVerificationMethod] = useState('');
-  const [formData, setFormData] = useState({
-    phoneNumber: '',
-    otp: '',
-    aadhaar: '',
-    pan: '',
-    email: '',
-    fullName: ''
-  });
+  const [documentNumber, setDocumentNumber] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationSuccess, setVerificationSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleMethodSelect = (method) => {
     setVerificationMethod(method);
+    setDocumentNumber('');
+    setErrorMessage('');
     setStep(2);
   };
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const handleVerify = async () => {
+    if (!documentNumber.trim()) {
+      setErrorMessage('Please enter document number');
+      return;
+    }
 
-  const sendOTP = () => {
     setIsVerifying(true);
-    setTimeout(() => {
-      setIsVerifying(false);
-      setStep(3);
-    }, 2000);
-  };
+    setErrorMessage('');
 
-  const verifyOTP = () => {
-    setIsVerifying(true);
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/auth/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          verificationType: verificationMethod,
+          documentNumber: documentNumber.trim()
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setVerificationSuccess(true);
+        // Update session to reflect verification status
+        await update({
+          ...session,
+          user: {
+            ...session.user,
+            isVerified: true,
+            verificationMethod: verificationMethod,
+            verifiedAt: new Date().toISOString()
+          }
+        });
+        setTimeout(() => {
+          router.push('/');
+        }, 3000);
+      } else {
+        setErrorMessage(data.message || 'Verification failed');
+      }
+    } catch (error) {
+      console.error('Verification error:', error);
+      setErrorMessage('Server error. Please try again later.');
+    } finally {
       setIsVerifying(false);
-      setVerificationSuccess(true);
-    }, 2000);
+    }
   };
 
   const resetVerification = () => {
@@ -125,17 +149,6 @@ export default function VerifyPage() {
 
                     <div className="grid md:grid-cols-3 gap-4">
                       <div
-                        onClick={() => handleMethodSelect('phone')}
-                        className="bg-[#0d1117] border border-[#30363d] rounded-xl p-6 cursor-pointer hover:border-[#238636] hover:shadow-lg hover:shadow-[#238636]/20 hover:-translate-y-1 active:scale-98 transition-all duration-200 text-center group"
-                      >
-                        <div className="text-4xl text-[#238636] mb-3 transition-transform duration-200 group-hover:scale-110">
-                          <i className="fas fa-mobile-alt"></i>
-                        </div>
-                        <h3 className="font-bold mb-2">Phone Number</h3>
-                        <p className="text-sm text-[#8b949e]">Verify via OTP</p>
-                      </div>
-
-                      <div
                         onClick={() => handleMethodSelect('aadhaar')}
                         className="bg-[#0d1117] border border-[#30363d] rounded-xl p-6 cursor-pointer hover:border-[#238636] hover:shadow-lg hover:shadow-[#238636]/20 hover:-translate-y-1 active:scale-98 transition-all duration-200 text-center group"
                       >
@@ -143,18 +156,29 @@ export default function VerifyPage() {
                           <i className="fas fa-id-card"></i>
                         </div>
                         <h3 className="font-bold mb-2">Aadhaar</h3>
-                        <p className="text-sm text-[#8b949e]">UIDAI Verification</p>
+                        <p className="text-sm text-[#8b949e]">12-digit UIDAI Number</p>
                       </div>
 
                       <div
-                        onClick={() => handleMethodSelect('digilocker')}
+                        onClick={() => handleMethodSelect('pan')}
                         className="bg-[#0d1117] border border-[#30363d] rounded-xl p-6 cursor-pointer hover:border-[#238636] hover:shadow-lg hover:shadow-[#238636]/20 hover:-translate-y-1 active:scale-98 transition-all duration-200 text-center group"
                       >
                         <div className="text-4xl text-[#238636] mb-3 transition-transform duration-200 group-hover:scale-110">
-                          <i className="fas fa-lock"></i>
+                          <i className="fas fa-credit-card"></i>
                         </div>
-                        <h3 className="font-bold mb-2">DigiLocker</h3>
-                        <p className="text-sm text-[#8b949e]">Digital Documents</p>
+                        <h3 className="font-bold mb-2">PAN Card</h3>
+                        <p className="text-sm text-[#8b949e]">Permanent Account Number</p>
+                      </div>
+
+                      <div
+                        onClick={() => handleMethodSelect('passport')}
+                        className="bg-[#0d1117] border border-[#30363d] rounded-xl p-6 cursor-pointer hover:border-[#238636] hover:shadow-lg hover:shadow-[#238636]/20 hover:-translate-y-1 active:scale-98 transition-all duration-200 text-center group"
+                      >
+                        <div className="text-4xl text-[#238636] mb-3 transition-transform duration-200 group-hover:scale-110">
+                          <i className="fas fa-passport"></i>
+                        </div>
+                        <h3 className="font-bold mb-2">Passport</h3>
+                        <p className="text-sm text-[#8b949e]">Indian Passport</p>
                       </div>
                     </div>
 
@@ -177,182 +201,71 @@ export default function VerifyPage() {
                 {step === 2 && (
                   <div className="space-y-6">
                     <div className="text-center mb-6">
-                      <h1 className="text-3xl font-bold mb-2">Enter Your Details</h1>
+                      <h1 className="text-3xl font-bold mb-2">
+                        {verificationMethod === 'aadhaar' && 'Enter Aadhaar Number'}
+                        {verificationMethod === 'pan' && 'Enter PAN Number'}
+                        {verificationMethod === 'passport' && 'Enter Passport Number'}
+                      </h1>
                       <p className="text-[#8b949e]">
-                        {verificationMethod === 'phone' && 'We\'ll send you an OTP to verify'}
-                        {verificationMethod === 'aadhaar' && 'Enter your Aadhaar details'}
-                        {verificationMethod === 'digilocker' && 'Connect with DigiLocker'}
-                      </p>
-                    </div>
-
-                    {verificationMethod === 'phone' && (
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-semibold mb-2">Full Name</label>
-                          <input
-                            type="text"
-                            name="fullName"
-                            value={formData.fullName}
-                            onChange={handleInputChange}
-                            placeholder="Enter your full name"
-                            className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl text-white focus:outline-none focus:border-[#238636] focus:ring-2 focus:ring-[#238636]/20 transition-all duration-200 hover:border-[#238636]/50"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-semibold mb-2">Phone Number</label>
-                          <div className="relative">
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8b949e]">+91</span>
-                            <input
-                              type="tel"
-                              name="phoneNumber"
-                              value={formData.phoneNumber}
-                              onChange={handleInputChange}
-                              placeholder="Enter 10-digit mobile number"
-                              maxLength={10}
-                              className="w-full pl-14 pr-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl text-white focus:outline-none focus:border-[#238636] focus:ring-2 focus:ring-[#238636]/20 transition-all duration-200 hover:border-[#238636]/50"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {verificationMethod === 'aadhaar' && (
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-semibold mb-2">Aadhaar Number</label>
-                          <input
-                            type="text"
-                            name="aadhaar"
-                            value={formData.aadhaar}
-                            onChange={handleInputChange}
-                            placeholder="Enter 12-digit Aadhaar number"
-                            maxLength={12}
-                            className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl text-white focus:outline-none focus:border-[#238636] focus:ring-2 focus:ring-[#238636]/20 transition-all duration-200 hover:border-[#238636]/50"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-semibold mb-2">Phone Number (Linked with Aadhaar)</label>
-                          <div className="relative">
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8b949e]">+91</span>
-                            <input
-                              type="tel"
-                              name="phoneNumber"
-                              value={formData.phoneNumber}
-                              onChange={handleInputChange}
-                              placeholder="Enter registered mobile number"
-                              maxLength={10}
-                              className="w-full pl-14 pr-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl text-white focus:outline-none focus:border-[#238636] focus:ring-2 focus:ring-[#238636]/20 transition-all duration-200 hover:border-[#238636]/50"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {verificationMethod === 'digilocker' && (
-                      <div className="space-y-6">
-                        <div className="text-center py-8">
-                          <i className="fas fa-lock text-6xl text-[#238636] mb-4"></i>
-                          <h3 className="text-xl font-bold mb-3">Connect with DigiLocker</h3>
-                          <p className="text-[#8b949e] mb-6">
-                            You'll be redirected to DigiLocker to securely verify your identity
-                          </p>
-                          <div className="space-y-3 text-left max-w-md mx-auto">
-                            <div className="flex items-center gap-3 text-sm">
-                              <i className="fas fa-check text-[#238636]"></i>
-                              <span>Instant verification</span>
-                            </div>
-                            <div className="flex items-center gap-3 text-sm">
-                              <i className="fas fa-check text-[#238636]"></i>
-                              <span>Government authorized</span>
-                            </div>
-                            <div className="flex items-center gap-3 text-sm">
-                              <i className="fas fa-check text-[#238636]"></i>
-                              <span>Secure document access</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() => setStep(1)}
-                        className="flex-1 px-6 py-3 border border-[#30363d] text-[#8b949e] rounded-xl hover:border-[#238636] hover:text-[#238636] active:scale-95 transition-all duration-200"
-                      >
-                        <i className="fas fa-arrow-left mr-2"></i>
-                        Back
-                      </button>
-                      <button
-                        onClick={sendOTP}
-                        disabled={isVerifying || (verificationMethod !== 'digilocker' && (!formData.phoneNumber || formData.phoneNumber.length !== 10))}
-                        className="flex-1 px-6 py-3 bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#238636]/50 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {isVerifying ? (
-                          <><i className="fas fa-spinner fa-spin mr-2"></i>Sending...</>
-                        ) : verificationMethod === 'digilocker' ? (
-                          <><i className="fas fa-external-link-alt mr-2"></i>Connect DigiLocker</>
-                        ) : (
-                          <><i className="fas fa-paper-plane mr-2"></i>Send OTP</>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Step 3: Verify OTP */}
-                {step === 3 && (
-                  <div className="space-y-6">
-                    <div className="text-center mb-6">
-                      <div className="w-16 h-16 bg-[#238636]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i className="fas fa-sms text-3xl text-[#238636]"></i>
-                      </div>
-                      <h1 className="text-3xl font-bold mb-2">Verify OTP</h1>
-                      <p className="text-[#8b949e]">
-                        We've sent a 6-digit code to +91 {formData.phoneNumber}
+                        {verificationMethod === 'aadhaar' && '12-digit Aadhaar number (e.g., 123456789012)'}
+                        {verificationMethod === 'pan' && '10-character PAN (e.g., ABCDE1234F)'}
+                        {verificationMethod === 'passport' && '8-character Passport (e.g., A1234567)'}
                       </p>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold mb-2">Enter OTP</label>
+                      <label className="block text-sm font-semibold mb-2">
+                        {verificationMethod === 'aadhaar' && 'Aadhaar Number'}
+                        {verificationMethod === 'pan' && 'PAN Number'}
+                        {verificationMethod === 'passport' && 'Passport Number'}
+                      </label>
                       <input
                         type="text"
-                        name="otp"
-                        value={formData.otp}
-                        onChange={handleInputChange}
-                        placeholder="Enter 6-digit OTP"
-                        maxLength={6}
-                        className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl text-white text-center text-2xl tracking-widest focus:outline-none focus:border-[#238636] focus:ring-2 focus:ring-[#238636]/20 transition-all duration-200 hover:border-[#238636]/50"
+                        value={documentNumber}
+                        onChange={(e) => setDocumentNumber(e.target.value.toUpperCase())}
+                        placeholder={
+                          verificationMethod === 'aadhaar' ? '123456789012' :
+                          verificationMethod === 'pan' ? 'ABCDE1234F' :
+                          'A1234567'
+                        }
+                        maxLength={verificationMethod === 'aadhaar' ? 12 : verificationMethod === 'pan' ? 10 : 8}
+                        className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl text-white text-lg tracking-wider focus:outline-none focus:border-[#238636] focus:ring-2 focus:ring-[#238636]/20 transition-all duration-200 hover:border-[#238636]/50"
                       />
                     </div>
 
-                    <div className="text-center">
-                      <button className="text-[#238636] hover:text-[#2ea043] text-sm transition-colors">
-                        Didn't receive? <span className="underline">Resend OTP</span>
-                      </button>
-                    </div>
+                    {errorMessage && (
+                      <div className="p-4 bg-[#da3633]/10 border border-[#da3633] rounded-xl">
+                        <div className="flex items-center gap-3">
+                          <i className="fas fa-exclamation-circle text-[#da3633]"></i>
+                          <p className="text-sm text-[#da3633]">{errorMessage}</p>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="flex gap-3">
                       <button
-                        onClick={() => setStep(2)}
+                        onClick={() => { setStep(1); setErrorMessage(''); }}
                         className="flex-1 px-6 py-3 border border-[#30363d] text-[#8b949e] rounded-xl hover:border-[#238636] hover:text-[#238636] active:scale-95 transition-all duration-200"
                       >
                         <i className="fas fa-arrow-left mr-2"></i>
                         Back
                       </button>
                       <button
-                        onClick={verifyOTP}
-                        disabled={isVerifying || formData.otp.length !== 6}
+                        onClick={handleVerify}
+                        disabled={isVerifying || !documentNumber.trim()}
                         className="flex-1 px-6 py-3 bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#238636]/50 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {isVerifying ? (
                           <><i className="fas fa-spinner fa-spin mr-2"></i>Verifying...</>
                         ) : (
-                          <><i className="fas fa-check mr-2"></i>Verify</>
+                          <><i className="fas fa-check-circle mr-2"></i>Verify Now</>
                         )}
                       </button>
                     </div>
                   </div>
                 )}
+
+                {/* Step 3 removed - direct verification */}
               </div>
             </>
           ) : (
@@ -364,7 +277,7 @@ export default function VerifyPage() {
                 </div>
                 <h1 className="text-3xl font-bold mb-3">Verification Successful!</h1>
                 <p className="text-[#8b949e] mb-8">
-                  Your identity has been verified successfully. You can now access all features.
+                  Your identity has been verified successfully. Redirecting to home...
                 </p>
                 
                 <div className="grid md:grid-cols-3 gap-4 mb-8">
@@ -388,18 +301,11 @@ export default function VerifyPage() {
                 <div className="flex gap-3">
                   <Link
                     href="/"
-                    className="flex-1 px-6 py-3 border border-[#238636] text-[#238636] rounded-xl hover:bg-[#238636] hover:text-white active:scale-95 transition-all duration-200 text-center"
+                    className="flex-1 px-6 py-3 bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#238636]/50 active:scale-95 transition-all duration-200 text-center"
                   >
                     <i className="fas fa-home mr-2"></i>
                     Go to Home
                   </Link>
-                  <button
-                    onClick={resetVerification}
-                    className="flex-1 px-6 py-3 bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#238636]/50 active:scale-95 transition-all duration-200"
-                  >
-                    <i className="fas fa-redo mr-2"></i>
-                    Verify Another
-                  </button>
                 </div>
               </div>
             </div>

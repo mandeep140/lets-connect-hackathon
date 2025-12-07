@@ -1,275 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import Link from 'next/link';
 
-// Demo PNR data
-const demoPNRs = [
-  {
-    pnr: '6223456789',
-    train: '12003 Shatabdi Express',
-    route: 'New Delhi → Amritsar',
-    distance: '449 km',
-    estimatedTime: '6h 15m',
-    passengers: [
-      { name: 'Arnab', age: 20, gender: 'Male', berth: 'A1/15' },
-      { name: 'Sonakshi', age: 19, gender: 'Female', berth: 'A1/16' }
-    ],
-    connections: [
-      { type: 'Local Train', icon: 'fa-train', description: 'Connect to suburban lines' },
-      { type: 'Metro', icon: 'fa-subway', description: 'Quick city transport' },
-      { type: 'Cab', icon: 'fa-car', description: 'Door-to-door service' },
-      { type: 'Bus', icon: 'fa-bus', description: 'Affordable city travel' }
-    ]
-  },
-  {
-    pnr: '6234567890',
-    train: '12259 Duronto Express',
-    route: 'Sealdah → New Delhi',
-    distance: '1,472 km',
-    estimatedTime: '16h 30m',
-    passengers: [
-      { name: 'Rahul Verma', age: 34, gender: 'Male', berth: 'B2/22' },
-      { name: 'Kiran Kaur', age: 31, gender: 'Female', berth: 'B2/23' },
-      { name: 'Ananya Sharma', age: 28, gender: 'Female', berth: 'B2/24' }
-    ],
-    connections: [
-      { type: 'Metro', icon: 'fa-subway', description: 'Delhi Metro connectivity' },
-      { type: 'Cab', icon: 'fa-taxi', description: 'Premium cab services' },
-      { type: 'Bus', icon: 'fa-bus-alt', description: 'Inter-city buses' },
-      { type: 'Local Train', icon: 'fa-train', description: 'Local railway network' }
-    ]
-  },
-  {
-    pnr: '6245678901',
-    train: '12301 Howrah Rajdhani',
-    route: 'Howrah → New Delhi',
-    distance: '1,441 km',
-    estimatedTime: '17h 45m',
-    passengers: [
-      { name: 'Neha Das', age: 27, gender: 'Female', berth: 'A1/8' },
-      { name: 'Manish Malik', age: 29, gender: 'Male', berth: 'A1/9' },
-      { name: 'Priya Singh', age: 26, gender: 'Female', berth: 'A1/10' }
-    ],
-    connections: [
-      { type: 'Local Train', icon: 'fa-train', description: 'Local EMU services' },
-      { type: 'Metro', icon: 'fa-subway', description: 'Kolkata Metro' },
-      { type: 'Cab', icon: 'fa-car', description: 'App-based cabs' },
-      { type: 'Bus', icon: 'fa-bus', description: 'City bus services' }
-    ]
-  },
-  {
-    pnr: '6256789012',
-    train: '12951 Mumbai Rajdhani',
-    route: 'Mumbai CST → New Delhi',
-    distance: '1,384 km',
-    estimatedTime: '15h 50m',
-    passengers: [
-      { name: 'Vikram Bose', age: 45, gender: 'Male', berth: 'A2/12' },
-      { name: 'Deepika Iyer', age: 42, gender: 'Female', berth: 'A2/13' }
-    ],
-    connections: [
-      { type: 'Metro', icon: 'fa-subway', description: 'Airport Metro Line' },
-      { type: 'Cab', icon: 'fa-taxi', description: 'Outstation cabs' },
-      { type: 'Bus', icon: 'fa-bus', description: 'Luxury bus services' },
-      { type: 'Local Train', icon: 'fa-train', description: 'Suburban trains' }
-    ]
-  },
-  {
-    pnr: '6267890123',
-    train: '22415 Vande Bharat Express',
-    route: 'New Delhi → Varanasi',
-    distance: '759 km',
-    estimatedTime: '8h 10m',
-    passengers: [
-      { name: 'Rajesh Kumar', age: 38, gender: 'Male', berth: 'C1/45' },
-      { name: 'Sunita Devi', age: 35, gender: 'Female', berth: 'C1/46' }
-    ],
-    connections: [
-      { type: 'Auto', icon: 'fa-motorcycle', description: 'Shared auto-rickshaw' },
-      { type: 'Cab', icon: 'fa-car', description: 'City cabs' },
-      { type: 'Bus', icon: 'fa-bus', description: 'State transport' },
-      { type: 'Local Train', icon: 'fa-train', description: 'Local connections' }
-    ]
-  },
-  {
-    pnr: '6278901234',
-    train: '12626 Kerala Express',
-    route: 'New Delhi → Thiruvananthapuram',
-    distance: '3,149 km',
-    estimatedTime: '48h 20m',
-    passengers: [
-      { name: 'Arun Nair', age: 41, gender: 'Male', berth: 'S4/18' },
-      { name: 'Lakshmi Menon', age: 39, gender: 'Female', berth: 'S4/19' },
-      { name: 'Rohan Nair', age: 16, gender: 'Male', berth: 'S4/20' }
-    ],
-    connections: [
-      { type: 'Bus', icon: 'fa-bus', description: 'KSRTC services' },
-      { type: 'Cab', icon: 'fa-taxi', description: 'Outstation travel' },
-      { type: 'Auto', icon: 'fa-motorcycle', description: 'Local auto services' },
-      { type: 'Ferry', icon: 'fa-ship', description: 'Backwater transport' }
-    ]
-  },
-  {
-    pnr: '6289012345',
-    train: '12002 Bhopal Shatabdi',
-    route: 'New Delhi → Bhopal',
-    distance: '704 km',
-    estimatedTime: '8h 25m',
-    passengers: [
-      { name: 'Sanjay Patel', age: 52, gender: 'Male', berth: 'B1/35' },
-      { name: 'Meera Patel', age: 48, gender: 'Female', berth: 'B1/36' },
-      { name: 'Tanvi Patel', age: 22, gender: 'Female', berth: 'B1/37' }
-    ],
-    connections: [
-      { type: 'Bus', icon: 'fa-bus', description: 'City bus network' },
-      { type: 'Cab', icon: 'fa-car', description: 'Local taxi services' },
-      { type: 'Auto', icon: 'fa-motorcycle', description: 'Auto-rickshaw' },
-      { type: 'Metro', icon: 'fa-subway', description: 'Metro in planning' }
-    ]
-  },
-  {
-    pnr: '6290123456',
-    train: '12430 Lucknow Mail',
-    route: 'New Delhi → Lucknow',
-    distance: '483 km',
-    estimatedTime: '6h 50m',
-    passengers: [
-      { name: 'Aarav Singh', age: 29, gender: 'Male', berth: 'S2/28' }
-    ],
-    connections: [
-      { type: 'Metro', icon: 'fa-subway', description: 'Lucknow Metro' },
-      { type: 'Cab', icon: 'fa-car', description: 'Ola/Uber services' },
-      { type: 'Bus', icon: 'fa-bus', description: 'UPSRTC buses' },
-      { type: 'Auto', icon: 'fa-motorcycle', description: 'E-rickshaws available' }
-    ]
-  },
-  {
-    pnr: '6201234567',
-    train: '12617 Mangala Lakshadweep',
-    route: 'Hazrat Nizamuddin → Ernakulam',
-    distance: '2,649 km',
-    estimatedTime: '42h 40m',
-    passengers: [
-      { name: 'Thomas George', age: 55, gender: 'Male', berth: 'A3/21' },
-      { name: 'Mary George', age: 53, gender: 'Female', berth: 'A3/22' }
-    ],
-    connections: [
-      { type: 'Metro', icon: 'fa-subway', description: 'Kochi Metro Rail' },
-      { type: 'Bus', icon: 'fa-bus', description: 'KSRTC services' },
-      { type: 'Cab', icon: 'fa-car', description: 'Taxi & cab booking' },
-      { type: 'Ferry', icon: 'fa-ship', description: 'Water transport' }
-    ]
-  },
-  {
-    pnr: '6212345678',
-    train: '12009 Shatabdi Express',
-    route: 'Mumbai CST → Ahmedabad',
-    distance: '492 km',
-    estimatedTime: '6h 30m',
-    passengers: [
-      { name: 'Amit Shah', age: 36, gender: 'Male', berth: 'C2/18' },
-      { name: 'Nisha Shah', age: 33, gender: 'Female', berth: 'C2/19' },
-      { name: 'Riya Shah', age: 8, gender: 'Female', berth: 'C2/20' },
-      { name: 'Dev Shah', age: 5, gender: 'Male', berth: 'C2/21' }
-    ],
-    connections: [
-      { type: 'Metro', icon: 'fa-subway', description: 'Ahmedabad Metro' },
-      { type: 'Bus', icon: 'fa-bus', description: 'GSRTC & BRTS' },
-      { type: 'Cab', icon: 'fa-taxi', description: 'App-based cabs' },
-      { type: 'Auto', icon: 'fa-motorcycle', description: 'Auto-rickshaw' }
-    ]
-  },
-  {
-    pnr: '6323456789',
-    train: '12644 Swarna Jayanti',
-    route: 'Chennai Central → Thiruvananthapuram',
-    distance: '719 km',
-    estimatedTime: '13h 30m',
-    passengers: [
-      { name: 'Karthik Raman', age: 31, gender: 'Male', berth: 'S1/42' },
-      { name: 'Divya Raman', age: 28, gender: 'Female', berth: 'S1/43' }
-    ],
-    connections: [
-      { type: 'Metro', icon: 'fa-subway', description: 'Chennai Metro' },
-      { type: 'Local Train', icon: 'fa-train', description: 'Suburban EMU trains' },
-      { type: 'Bus', icon: 'fa-bus', description: 'MTC & State buses' },
-      { type: 'Cab', icon: 'fa-car', description: 'Online cab booking' }
-    ]
-  },
-  {
-    pnr: '6334567890',
-    train: '12860 Gitanjali Express',
-    route: 'Mumbai CST → Howrah',
-    distance: '1,968 km',
-    estimatedTime: '33h 05m',
-    passengers: [
-      { name: 'Sourav Ghosh', age: 44, gender: 'Male', berth: 'B3/14' },
-      { name: 'Rina Ghosh', age: 41, gender: 'Female', berth: 'B3/15' },
-      { name: 'Arjun Ghosh', age: 18, gender: 'Male', berth: 'B3/16' }
-    ],
-    connections: [
-      { type: 'Metro', icon: 'fa-subway', description: 'Mumbai Metro' },
-      { type: 'Local Train', icon: 'fa-train', description: 'Western/Central line' },
-      { type: 'Bus', icon: 'fa-bus', description: 'BEST & MSRTC' },
-      { type: 'Cab', icon: 'fa-taxi', description: 'Mumbai taxis' }
-    ]
-  },
-  {
-    pnr: '6345678902',
-    train: '22691 Rajdhani Express',
-    route: 'Bangalore → New Delhi',
-    distance: '2,444 km',
-    estimatedTime: '34h 15m',
-    passengers: [
-      { name: 'Harish Reddy', age: 39, gender: 'Male', berth: 'A1/25' },
-      { name: 'Sangeetha Reddy', age: 37, gender: 'Female', berth: 'A1/26' }
-    ],
-    connections: [
-      { type: 'Metro', icon: 'fa-subway', description: 'Namma Metro' },
-      { type: 'Bus', icon: 'fa-bus', description: 'BMTC & KSRTC' },
-      { type: 'Cab', icon: 'fa-car', description: 'Cab aggregators' },
-      { type: 'Auto', icon: 'fa-motorcycle', description: 'Auto-rickshaw' }
-    ]
-  },
-  {
-    pnr: '6356789013',
-    train: '12505 North East Express',
-    route: 'New Delhi → Guwahati',
-    distance: '1,962 km',
-    estimatedTime: '30h 50m',
-    passengers: [
-      { name: 'Abhijit Bora', age: 47, gender: 'Male', berth: 'S3/11' },
-      { name: 'Ankita Bora', age: 19, gender: 'Female', berth: 'S3/12' }
-    ],
-    connections: [
-      { type: 'Bus', icon: 'fa-bus', description: 'ASTC bus services' },
-      { type: 'Cab', icon: 'fa-car', description: 'City taxi & cabs' },
-      { type: 'Auto', icon: 'fa-motorcycle', description: 'Shared autos' },
-      { type: 'Ferry', icon: 'fa-ship', description: 'River transport' }
-    ]
-  },
-  {
-    pnr: '6367890124',
-    train: '12432 Trivandrum Rajdhani',
-    route: 'Trivandrum → New Delhi',
-    distance: '3,146 km',
-    estimatedTime: '46h 30m',
-    passengers: [
-      { name: 'Suresh Pillai', age: 58, gender: 'Male', berth: 'A2/5' },
-      { name: 'Radha Pillai', age: 56, gender: 'Female', berth: 'A2/6' },
-      { name: 'Kavya Pillai', age: 24, gender: 'Female', berth: 'A2/7' }
-    ],
-    connections: [
-      { type: 'Bus', icon: 'fa-bus', description: 'KSRTC long distance' },
-      { type: 'Cab', icon: 'fa-taxi', description: 'Prepaid taxi' },
-      { type: 'Auto', icon: 'fa-motorcycle', description: 'Auto-rickshaw' },
-      { type: 'Ferry', icon: 'fa-ship', description: 'Coastal ferries' }
-    ]
-  }
-];
-
 export default function Home() {
+  const { data: session, status, update } = useSession();
+  const [userDetails, setUserDetails] = useState(null);
+  const [demoPNRs, setDemoPNRs] = useState([]);
   const [pnrInput, setPnrInput] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [pnrMessage, setPnrMessage] = useState('');
@@ -277,16 +15,66 @@ export default function Home() {
   const [currentPNRData, setCurrentPNRData] = useState(null);
   const [showResults, setShowResults] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [registerForm, setRegisterForm] = useState({
     fullName: '',
     age: '',
     phone: '',
     email: '',
+    password: '',
     preferences: 'economy'
+  });
+  const [loginForm, setLoginForm] = useState({
+    email: '',
+    password: ''
   });
   const [showWelcome, setShowWelcome] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedPassengers, setSelectedPassengers] = useState([]);
+
+  // Fetch PNRs from database
+  useEffect(() => {
+    const fetchPNRs = async () => {
+      try {
+        const response = await fetch('/api/pnr');
+        const data = await response.json();
+        if (data.success) {
+          setDemoPNRs(data.pnrs);
+        }
+      } catch (error) {
+        console.error('Error fetching PNRs:', error);
+      }
+    };
+    
+    fetchPNRs();
+  }, []);
+
+  // Fetch user details from database when session exists
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      if (session?.user?.email && status === 'authenticated') {
+        try {
+          const response = await fetch('/api/auth/me', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: session.user.email })
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              setUserDetails(data.user);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching user details:', error);
+        }
+      }
+    };
+
+    fetchUserDetails();
+  }, [session?.user?.email, status]); // Removed 'update' from dependencies
 
   const handlePNRInput = (e) => {
     const value = e.target.value.replace(/[^0-9]/g, '');
@@ -348,14 +136,70 @@ export default function Home() {
     }, 2000);
   };
 
-  const handleRegisterSubmit = (e) => {
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
-    setShowWelcome(true);
-    setTimeout(() => {
-      setShowRegisterModal(false);
-      setShowWelcome(false);
-      setRegisterForm({ fullName: '', age: '', phone: '', email: '', preferences: 'economy' });
-    }, 4000);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(registerForm)
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setShowWelcome(true);
+        setTimeout(() => {
+          setShowRegisterModal(false);
+          setShowWelcome(false);
+          setShowLoginModal(true);
+          setRegisterForm({ fullName: '', age: '', phone: '', email: '', password: '', preferences: 'economy' });
+        }, 3000);
+      } else {
+        alert(data.message || 'Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('Server error. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const result = await signIn('credentials', {
+        email: loginForm.email,
+        password: loginForm.password,
+        redirect: false
+      });
+
+      if (result?.error) {
+        alert(result.error || 'Login failed. Please try again.');
+      } else if (result?.ok) {
+        setShowLoginModal(false);
+        setLoginForm({ email: '', password: '' });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Server error. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut({ redirect: false });
+      alert('Logged out successfully!');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   const handleConnectionBooking = (connection) => {
@@ -418,19 +262,45 @@ export default function Home() {
             <li><a href="#pnr-section" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">PNR Search</a></li>
             <li><a href="#features" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">Features</a></li>
             <li><a href="#about" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">About</a></li>
-            <li><a href="#pricing" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">Pricing</a></li>
+            {session?.user && (
+              <li><Link href="/admin" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all flex items-center gap-2"><i className="fas fa-cog"></i>Admin</Link></li>
+            )}
             <li><a href="#contact" className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[rgba(35,134,54,0.1)] px-4 py-2 rounded-lg transition-all">Contact</a></li>
           </ul>
 
           <div className="flex items-center gap-4">
-            <button onClick={() => setShowRegisterModal(true)} className="flex items-center gap-2 px-4 py-2 rounded-xl text-[#8b949e] hover:bg-[#161b22] transition-all">
-              <i className="fas fa-user-plus"></i>
-              Register
-            </button>
-            <Link href="/verify" className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200">
-              <i className="fas fa-shield-check"></i>
-              Verify Now
-            </Link>
+            {session?.user ? (
+              <>
+                <div className="hidden md:flex items-center gap-2 px-3 py-2 bg-[#161b22] border border-[#30363d] rounded-xl">
+                  <i className={`fas fa-user-circle ${(userDetails?.isVerified || session.user.isVerified) ? 'text-[#238636]' : 'text-[#8b949e]'}`}></i>
+                  <span className="text-sm">{session.user.name}</span>
+                  {(userDetails?.isVerified || session.user.isVerified) && (
+                    <i className="fas fa-badge-check text-[#238636] ml-1" title="Verified User"></i>
+                  )}
+                </div>
+                {!(userDetails?.isVerified || session.user.isVerified) && (
+                  <Link href="/verify" className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200">
+                    <i className="fas fa-shield-check"></i>
+                    Verify Now
+                  </Link>
+                )}
+                <button onClick={handleLogout} className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl border border-[#da3633] text-[#da3633] hover:bg-[#da3633] hover:text-white transition-all">
+                  <i className="fas fa-sign-out-alt"></i>
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => setShowLoginModal(true)} className="flex items-center gap-2 px-4 py-2 rounded-xl text-[#8b949e] hover:bg-[#161b22] transition-all">
+                  <i className="fas fa-sign-in-alt"></i>
+                  Login
+                </button>
+                <button onClick={() => setShowRegisterModal(true)} className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200">
+                  <i className="fas fa-user-plus"></i>
+                  Register
+                </button>
+              </>
+            )}
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2">
               <div className="w-5 flex flex-col gap-1">
                 <span className="h-0.5 bg-white rounded"></span>
@@ -554,9 +424,9 @@ export default function Home() {
             <p className="text-center text-[#8b949e] mb-6">Click any card below to instantly test our platform</p>
             
             <div className="grid md:grid-cols-3 gap-4">
-              {demoPNRs.map((pnr, index) => (
+              {demoPNRs.map((pnr) => (
                 <div
-                  key={pnr.pnr}
+                  key={pnr._id || pnr.pnr}
                   onClick={() => handleDemoPNRClick(pnr.pnr)}
                   className="bg-[#161b22] border border-[#30363d] rounded-xl p-4 cursor-pointer hover:border-[#238636] hover:shadow-lg hover:shadow-[#238636]/20 hover:-translate-y-1 active:scale-98 transition-all duration-200"
                 >
@@ -565,7 +435,7 @@ export default function Home() {
                   <p className="text-sm text-[#8b949e] mb-2">{pnr.route}</p>
                   <p className="text-xs text-[#6e7681]">
                     <i className="fas fa-route mr-1"></i>{pnr.distance} • 
-                    <i className="fas fa-users ml-2 mr-1"></i>{pnr.passengers.length} passenger{pnr.passengers.length > 1 ? 's' : ''}
+                    <i className="fas fa-users ml-2 mr-1"></i>{pnr.passengers?.length || 0} passenger{pnr.passengers?.length > 1 ? 's' : ''}
                   </p>
                 </div>
               ))}
@@ -928,7 +798,7 @@ export default function Home() {
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#161b22] border border-[#30363d] rounded-2xl max-w-md w-full p-8 relative animate-scale-in"
+            className="bg-[#161b22] border border-[#30363d] rounded-2xl max-w-md w-full p-8 relative animate-scale-in max-h-[90vh] overflow-y-auto"
           >
             <button
               onClick={() => setShowRegisterModal(false)}
@@ -952,26 +822,6 @@ export default function Home() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold mb-2">Age</label>
-                    <input
-                      type="number"
-                      value={registerForm.age}
-                      onChange={(e) => setRegisterForm({...registerForm, age: e.target.value})}
-                      required
-                      className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl focus:outline-none focus:border-[#238636]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold mb-2">Phone Number</label>
-                    <input
-                      type="tel"
-                      value={registerForm.phone}
-                      onChange={(e) => setRegisterForm({...registerForm, phone: e.target.value})}
-                      required
-                      className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl focus:outline-none focus:border-[#238636]"
-                    />
-                  </div>
-                  <div>
                     <label className="block text-sm font-semibold mb-2">Email Address</label>
                     <input
                       type="email"
@@ -981,32 +831,144 @@ export default function Home() {
                       className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl focus:outline-none focus:border-[#238636]"
                     />
                   </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-2">Password</label>
+                    <input
+                      type="password"
+                      value={registerForm.password}
+                      onChange={(e) => setRegisterForm({...registerForm, password: e.target.value})}
+                      required
+                      minLength={6}
+                      className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl focus:outline-none focus:border-[#238636]"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold mb-2">Age</label>
+                      <input
+                        type="number"
+                        value={registerForm.age}
+                        onChange={(e) => setRegisterForm({...registerForm, age: e.target.value})}
+                        required
+                        min={1}
+                        max={120}
+                        className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl focus:outline-none focus:border-[#238636]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold mb-2">Phone Number</label>
+                      <input
+                        type="tel"
+                        value={registerForm.phone}
+                        onChange={(e) => setRegisterForm({...registerForm, phone: e.target.value})}
+                        required
+                        pattern="[0-9]{10}"
+                        placeholder="10 digits"
+                        className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl focus:outline-none focus:border-[#238636]"
+                      />
+                    </div>
+                  </div>
                   <button 
                     type="submit" 
-                    className="w-full py-3 bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#238636]/50 hover:scale-105 active:scale-95 transition-all duration-200"
+                    disabled={isLoading}
+                    className="w-full py-3 bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#238636]/50 hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <i className="fas fa-user-plus mr-2"></i>
-                    Register Now
+                    {isLoading ? (
+                      <><i className="fas fa-spinner fa-spin mr-2"></i>Registering...</>
+                    ) : (
+                      <><i className="fas fa-user-plus mr-2"></i>Register Now</>
+                    )}
                   </button>
+                  <p className="text-center text-sm text-[#8b949e]">
+                    Already have an account?{' '}
+                    <button 
+                      type="button"
+                      onClick={() => {
+                        setShowRegisterModal(false);
+                        setShowLoginModal(true);
+                      }}
+                      className="text-[#238636] hover:underline"
+                    >
+                      Login here
+                    </button>
+                  </p>
                 </form>
               </>
             ) : (
               <div className="text-center py-8">
-                <i className="fas fa-check-circle text-[80px] text-[#238636] mb-4"></i>
+                <i className="fas fa-check-circle text-[80px] text-[#238636] mb-4 animate-bounce"></i>
                 <h3 className="text-2xl font-bold mb-2">Welcome {registerForm.fullName}!</h3>
-                <p className="text-[#8b949e] mb-6">Travel with us, it's worth it!</p>
-                <button
-                  onClick={() => {
-                    setShowRegisterModal(false);
-                    setShowWelcome(false);
-                  }}
-                  className="px-6 py-3 bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#238636]/50 hover:scale-105 active:scale-95 transition-all duration-200"
-                >
-                  <i className="fas fa-rocket mr-2"></i>
-                  Start Your Journey
-                </button>
+                <p className="text-[#8b949e] mb-6">Registration successful! Please login to continue.</p>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div 
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in"
+          onClick={() => setShowLoginModal(false)}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-[#161b22] border border-[#30363d] rounded-2xl max-w-md w-full p-8 relative animate-scale-in"
+          >
+            <button
+              onClick={() => setShowLoginModal(false)}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center hover:bg-[#0d1117] rounded-lg transition-all"
+            >
+              <i className="fas fa-times"></i>
+            </button>
+
+            <h3 className="text-2xl font-bold mb-6">Welcome Back!</h3>
+            <form onSubmit={handleLoginSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold mb-2">Email Address</label>
+                <input
+                  type="email"
+                  value={loginForm.email}
+                  onChange={(e) => setLoginForm({...loginForm, email: e.target.value})}
+                  required
+                  className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl focus:outline-none focus:border-[#238636]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2">Password</label>
+                <input
+                  type="password"
+                  value={loginForm.password}
+                  onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
+                  required
+                  className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl focus:outline-none focus:border-[#238636]"
+                />
+              </div>
+              <button 
+                type="submit" 
+                disabled={isLoading}
+                className="w-full py-3 bg-gradient-to-br from-[#238636] to-[#2ea043] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#238636]/50 hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <><i className="fas fa-spinner fa-spin mr-2"></i>Logging in...</>
+                ) : (
+                  <><i className="fas fa-sign-in-alt mr-2"></i>Login</>
+                )}
+              </button>
+              <p className="text-center text-sm text-[#8b949e]">
+                Don't have an account?{' '}
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setShowLoginModal(false);
+                    setShowRegisterModal(true);
+                  }}
+                  className="text-[#238636] hover:underline"
+                >
+                  Register here
+                </button>
+              </p>
+            </form>
           </div>
         </div>
       )}
