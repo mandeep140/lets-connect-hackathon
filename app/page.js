@@ -34,21 +34,20 @@ export default function Home() {
   const [selectedPassengers, setSelectedPassengers] = useState([]);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
-  // Fetch PNRs from database
+  // Generate demo PNRs
   useEffect(() => {
-    const fetchPNRs = async () => {
-      try {
-        const response = await fetch('/api/pnr');
-        const data = await response.json();
-        if (data.success) {
-          setDemoPNRs(data.pnrs);
-        }
-      } catch (error) {
-        console.error('Error fetching PNRs:', error);
+    // Generate 5 random demo PNRs
+    const generateDemoPNRs = () => {
+      const pnrs = [];
+      for (let i = 0; i < 5; i++) {
+        pnrs.push({
+          pnr: Math.random().toString().slice(2, 12)
+        });
       }
+      setDemoPNRs(pnrs);
     };
     
-    fetchPNRs();
+    generateDemoPNRs();
   }, []);
 
   // Fetch user details from database when session exists
@@ -99,14 +98,8 @@ export default function Home() {
       setPnrMessage(`Enter ${10 - value.length} more digits`);
       setMessageType('info');
     } else if (value.length === 10) {
-      const pnrExists = demoPNRs.find(p => p.pnr === value);
-      if (pnrExists) {
-        setPnrMessage('✓ Valid demo PNR found!');
-        setMessageType('success');
-      } else {
-        setPnrMessage('PNR not found in demo data');
-        setMessageType('error');
-      }
+      setPnrMessage('✓ PNR ready to search');
+      setMessageType('success');
     }
   };
 
@@ -115,7 +108,7 @@ export default function Home() {
     setTimeout(() => searchPNR(pnr), 300);
   };
 
-  const searchPNR = (pnr = pnrInput) => {
+  const searchPNR = async (pnr = pnrInput) => {
     if (isSearching) return;
 
     if (!pnr || pnr.length !== 10) {
@@ -124,29 +117,35 @@ export default function Home() {
       return;
     }
 
-    const pnrData = demoPNRs.find(p => p.pnr === pnr);
-
-    if (!pnrData) {
-      setPnrMessage('PNR not found in demo data. Try one of the demo PNRs below.');
-      setMessageType('error');
-      return;
-    }
-
     setIsSearching(true);
-    setPnrMessage('');
+    setPnrMessage('Searching PNR...');
+    setMessageType('info');
 
-    setTimeout(() => {
-      setCurrentPNRData(pnrData);
-      setPnrMessage('✓ PNR found successfully!');
-      setMessageType('success');
+    try {
+      const response = await fetch(`/api/pnr/${pnr}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        setCurrentPNRData(data);
+        setPnrMessage('✓ PNR found successfully!');
+        setMessageType('success');
+        setShowResults(true);
+        setSelectedPassengers([]);
+        
+        setTimeout(() => {
+          document.getElementById('journey-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 500);
+      } else {
+        setPnrMessage('PNR not found. Please try again.');
+        setMessageType('error');
+      }
+    } catch (error) {
+      console.error('Error searching PNR:', error);
+      setPnrMessage('Error searching PNR. Please try again.');
+      setMessageType('error');
+    } finally {
       setIsSearching(false);
-      setShowResults(true);
-      setSelectedPassengers([]);
-      
-      setTimeout(() => {
-        document.getElementById('journey-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 500);
-    }, 2000);
+    }
   };
 
   const handleRegisterSubmit = async (e) => {
@@ -170,12 +169,9 @@ export default function Home() {
           setShowLoginModal(true);
           setRegisterForm({ fullName: '', age: '', phone: '', email: '', password: '', preferences: 'economy' });
         }, 3000);
-      } else {
-        alert(data.message || 'Registration failed. Please try again.');
       }
     } catch (error) {
       console.error('Registration error:', error);
-      alert('Server error. Please try again later.');
     } finally {
       setIsLoading(false);
     }
@@ -192,15 +188,12 @@ export default function Home() {
         redirect: false
       });
 
-      if (result?.error) {
-        alert(result.error || 'Login failed. Please try again.');
-      } else if (result?.ok) {
+      if (result?.ok) {
         setShowLoginModal(false);
         setLoginForm({ email: '', password: '' });
       }
     } catch (error) {
       console.error('Login error:', error);
-      alert('Server error. Please try again later.');
     } finally {
       setIsLoading(false);
     }
@@ -209,7 +202,6 @@ export default function Home() {
   const handleLogout = async () => {
     try {
       await signOut({ redirect: false });
-      alert('Logged out successfully!');
     } catch (error) {
       console.error('Logout error:', error);
     }
@@ -217,22 +209,19 @@ export default function Home() {
 
   const handleConnectionBooking = (connection) => {
     if (selectedPassengers.length === 0) {
-      alert('⚠️ Please select at least one passenger to proceed with booking.');
       return;
     }
 
     const passengerNames = selectedPassengers.map(index => currentPNRData.passengers[index].name).join(', ');
     
-    if (confirm(`🚀 Ready to book ${connection.type}?\n\nService: ${connection.description}\nPassengers: ${passengerNames}\n\nYou'll be redirected to our booking platform.`)) {
-      if (currentPNRData) {
-        const bookingData = {
-          ...currentPNRData,
-          selectedPassengers: selectedPassengers.map(index => currentPNRData.passengers[index])
-        };
-        sessionStorage.setItem('currentPNRData', JSON.stringify(bookingData));
-      }
-      window.location.href = `/booking?type=${encodeURIComponent(connection.type)}&service=${encodeURIComponent(connection.description)}&pnr=${currentPNRData?.pnr || ''}&passengers=${selectedPassengers.length}`;
+    if (currentPNRData) {
+      const bookingData = {
+        ...currentPNRData,
+        selectedPassengers: selectedPassengers.map(index => currentPNRData.passengers[index])
+      };
+      sessionStorage.setItem('currentPNRData', JSON.stringify(bookingData));
     }
+    window.location.href = `/booking?type=${encodeURIComponent(connection.type)}&service=${encodeURIComponent(connection.description)}&pnr=${currentPNRData?.pnr || ''}&passengers=${selectedPassengers.length}`;
   };
 
   const togglePassengerSelection = (index) => {
@@ -555,11 +544,77 @@ export default function Home() {
               </div>
 
             <div className="bg-[#161b22] border border-[#30363d] rounded-2xl p-8 mb-8">
-              <h3 className="text-2xl font-bold mb-4">{currentPNRData.train}</h3>
-              <div className="flex flex-wrap gap-4 text-[#8b949e] mb-6">
-                <span>{currentPNRData.route}</span>
-                <span>{currentPNRData.distance}</span>
-                <span>{currentPNRData.estimatedTime}</span>
+              <div className="flex items-start justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-bold mb-2">{currentPNRData.train_name}</h3>
+                  <p className="text-[#8b949e] font-mono">Train #{currentPNRData.train_number}</p>
+                </div>
+                <div className="text-right">
+                  <div className="px-4 py-2 bg-[#238636]/20 border border-[#238636] rounded-lg">
+                    <span className="text-sm text-[#8b949e]">PNR</span>
+                    <p className="font-mono font-bold text-[#238636]">{currentPNRData.pnr}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-4 gap-4 mb-6">
+                <div className="bg-[#0d1117] border border-[#30363d] rounded-xl p-4">
+                  <div className="flex items-center gap-2 text-[#8b949e] mb-2">
+                    <i className="fas fa-map-marker-alt"></i>
+                    <span className="text-xs">From</span>
+                  </div>
+                  <p className="font-bold text-lg">{currentPNRData.from_station}</p>
+                </div>
+                
+                <div className="bg-[#0d1117] border border-[#30363d] rounded-xl p-4">
+                  <div className="flex items-center gap-2 text-[#8b949e] mb-2">
+                    <i className="fas fa-map-marker-alt"></i>
+                    <span className="text-xs">To</span>
+                  </div>
+                  <p className="font-bold text-lg">{currentPNRData.to_station}</p>
+                </div>
+                
+                <div className="bg-[#0d1117] border border-[#30363d] rounded-xl p-4">
+                  <div className="flex items-center gap-2 text-[#8b949e] mb-2">
+                    <i className="fas fa-clock"></i>
+                    <span className="text-xs">Arrival Time</span>
+                  </div>
+                  <p className="font-bold text-lg">{currentPNRData.boarding_time}</p>
+                </div>
+                
+                <div className="bg-[#0d1117] border border-[#30363d] rounded-xl p-4">
+                  <div className="flex items-center gap-2 text-[#8b949e] mb-2">
+                    <i className="fas fa-calendar"></i>
+                    <span className="text-xs">Journey Date</span>
+                  </div>
+                  <p className="font-bold text-sm">{currentPNRData.journey_date}</p>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-4 mb-6">
+                <div className="flex items-center gap-3">
+                  <i className="fas fa-route text-[#238636] text-xl"></i>
+                  <div>
+                    <p className="text-xs text-[#8b949e]">Distance</p>
+                    <p className="font-semibold">{currentPNRData.distance}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <i className="fas fa-hourglass-half text-[#1f6feb] text-xl"></i>
+                  <div>
+                    <p className="text-xs text-[#8b949e]">Duration</p>
+                    <p className="font-semibold">{currentPNRData.journey_duration}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <i className="fas fa-chair text-[#da3633] text-xl"></i>
+                  <div>
+                    <p className="text-xs text-[#8b949e]">Class</p>
+                    <p className="font-semibold">{currentPNRData.class}</p>
+                  </div>
+                </div>
               </div>
 
               <h4 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -625,27 +680,41 @@ export default function Home() {
                 )}
               </p>
               <div className="grid md:grid-cols-4 gap-4">
-                {currentPNRData.connections.map((connection, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleConnectionBooking(connection)}
-                    className={`bg-[#0d1117] border border-[#30363d] rounded-xl p-6 ${selectedPassengers.length > 0 ? 'cursor-pointer hover:border-[#238636] hover:shadow-lg hover:shadow-[#238636]/30 hover:-translate-y-2 active:scale-95' : 'opacity-50 cursor-not-allowed'} transition-all duration-200 text-center`}
-                  >
-                    <div className="text-4xl text-[#238636] mb-3 transition-transform duration-200 hover:scale-110">
-                      <i className={`fas ${connection.icon}`}></i>
-                    </div>
-                    <h4 className="font-bold mb-2">{connection.type}</h4>
-                    <p className="text-sm text-[#8b949e]">{connection.description}</p>
-                    {selectedPassengers.length > 0 && (
-                      <div className="mt-3 pt-3 border-t border-[#30363d]">
-                        <span className="text-xs text-[#238636]">
-                          <i className="fas fa-users mr-1"></i>
-                          {selectedPassengers.length} passenger{selectedPassengers.length > 1 ? 's' : ''}
-                        </span>
+                {(() => {
+                  // Filter connections based on train type
+                  let availableConnections = [];
+                  const trainType = currentPNRData.train_type;
+                  
+                  if (trainType === 'Metro') {
+                    availableConnections = [
+                      { type: 'Metro', icon: 'fa-subway', description: 'Quick metro connections' }
+                    ];
+                  } else if (trainType === 'Local Train') {
+                    availableConnections = [
+                      { type: 'Local Train', icon: 'fa-train', description: 'Local train services' }
+                    ];
+                  } else {
+                    // Express, Mail, Shatabdi trains can connect to both
+                    availableConnections = [
+                      { type: 'Metro', icon: 'fa-subway', description: 'Quick metro connections' },
+                      { type: 'Local Train', icon: 'fa-train', description: 'Local train services' }
+                    ];
+                  }
+                  
+                  return availableConnections.map((connection, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleConnectionBooking(connection)}
+                      className={`bg-[#0d1117] border border-[#30363d] rounded-xl p-6 ${selectedPassengers.length > 0 ? 'cursor-pointer hover:border-[#238636] hover:shadow-lg hover:shadow-[#238636]/30 hover:-translate-y-2 active:scale-95' : 'opacity-50 cursor-not-allowed'} transition-all duration-200 text-center`}
+                    >
+                      <div className="text-4xl text-[#238636] mb-3 transition-transform duration-200 hover:scale-110">
+                        <i className={`fas ${connection.icon}`}></i>
                       </div>
-                    )}
-                  </div>
-                ))}
+                      <h4 className="font-bold mb-2">{connection.type}</h4>
+                      <p className="text-sm text-[#8b949e]">{connection.description}</p>
+                    </div>
+                  ));
+                })()}
               </div>
             </div>
           </div>
